@@ -10,7 +10,7 @@ package personalhealthtracker;
  *
  * @author Gennaro
  */
-public class UserInterface
+public class LoginController
 {
     
 }
