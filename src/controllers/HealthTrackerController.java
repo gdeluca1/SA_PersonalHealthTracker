@@ -1,6 +1,7 @@
-package personalhealthtracker;
+package controllers;
 
 import javax.swing.JOptionPane;
+import views.HealthTrackerView;
 
 public class HealthTrackerController
 {

@@ -1,4 +1,7 @@
-package personalhealthtracker;
+package controllers;
+
+import views.HealthTrackerView;
+import views.LoginView;
 
 public class LoginController
 {

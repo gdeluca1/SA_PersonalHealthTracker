@@ -1,5 +1,8 @@
 package personalhealthtracker;
 
+import views.LoginView;
+import controllers.LoginController;
+
 public class PersonalHealthTracker
 {
     

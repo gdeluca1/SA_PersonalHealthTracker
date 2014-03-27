@@ -1,4 +1,4 @@
-package personalhealthtracker;
+package views;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import personalhealthtracker.PersonalHealthTracker;
 
 public class HealthTrackerView extends javax.swing.JFrame
 {
