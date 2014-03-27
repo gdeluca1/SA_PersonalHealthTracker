@@ -29,6 +29,7 @@ public class HealthTrackerView extends javax.swing.JFrame
     public HealthTrackerView()
     {
         initComponents();
+        
         // Center the frame in the middle of the screen.
         setLocation(screenSize.width/2 - getWidth()/2, screenSize.height/2 - getHeight()/2);
     }

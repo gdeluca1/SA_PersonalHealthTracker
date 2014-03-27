@@ -19,9 +19,9 @@ public class PersonalHealthTracker
     public static void main(String[] args)
     {
         // TODO code application logic here
-        HealthTrackerView healthTrackerView = new HealthTrackerView();
-        healthTrackerView.setVisible(true);
-        HealthTrackerController controller = new HealthTrackerController(healthTrackerView);
+        LoginView loginView = new LoginView();
+        loginView.setVisible(true);
+        LoginController loginController = new LoginController(loginView);
     }
     
 }
