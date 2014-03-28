@@ -15,4 +15,14 @@ public class ActivityFile
     {
         activities.add(log);
     }
+
+    public void setActivities(ArrayList<ActivityLog> activities)
+    {
+        this.activities = activities;
+    }
+
+    public ArrayList<ActivityLog> getActivities()
+    {
+        return activities;
+    }
 }

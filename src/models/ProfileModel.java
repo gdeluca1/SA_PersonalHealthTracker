@@ -23,9 +23,14 @@ public class ProfileModel
      * the profile list.
      * @param profileList
      */
-    public void restoreProfileTable(LinkedList<LinkedList<String>> profileList)
+    public void restoreProfileList(LinkedList<LinkedList<String>> profileList)
     {
         this.profileList = profileList;
+    }
+
+    public LinkedList<LinkedList<String>> getProfileList()
+    {
+        return profileList;
     }
     
     public void createProfile(String userName, String password, String securityQuestion, String securityAnswer)
