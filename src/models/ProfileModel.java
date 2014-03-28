@@ -14,8 +14,15 @@ public class ProfileModel
     
     private static ProfileModel instance;
     
+    /**
+     * Setting this variable to true adds the admin account to the profileList.
+     */
     private static final boolean DEBUG = true;
     
+    /**
+     * This class is a singleton class. Instances may only be obtained using 
+     * the getInstance() method.
+     */
     private ProfileModel()
     {
         currentUsername = null;
