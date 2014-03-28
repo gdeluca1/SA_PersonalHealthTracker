@@ -3,6 +3,9 @@ package views;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import personalhealthtracker.PersonalHealthTracker;
 
 public class LoginView extends javax.swing.JFrame
 {
@@ -20,6 +23,16 @@ public class LoginView extends javax.swing.JFrame
         
         // Bind the "Enter" key to the Login Button.
         getRootPane().setDefaultButton(loginButton);
+        
+        try
+        {
+             setIconImage(ImageIO.read(PersonalHealthTracker.class.getResource("librarian.jpg")));
+        }
+        catch (IOException ex)
+        {
+            ex.printStackTrace();
+            System.out.println("Failed to set icon image in login view.");
+        }
     }
     
     static 
