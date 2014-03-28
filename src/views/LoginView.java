@@ -32,6 +32,16 @@ public class LoginView extends javax.swing.JFrame
     {
         loginButton.addActionListener(listener);
     }
+    
+    public String getUsername()
+    {
+        return usernameField.getText();
+    }
+    
+    public String getPassword()
+    {
+        return new String(passwordField.getPassword());
+    }
 
     
     // Code below this line is generated code.
@@ -49,7 +59,7 @@ public class LoginView extends javax.swing.JFrame
         userIdLabel = new javax.swing.JLabel();
         passwordLabel = new javax.swing.JLabel();
         passwordField = new javax.swing.JPasswordField();
-        userIdField = new javax.swing.JTextField();
+        usernameField = new javax.swing.JTextField();
         loginButton = new javax.swing.JButton();
         forgotPasswordButton = new javax.swing.JButton();
         createAccountButton = new javax.swing.JButton();
@@ -57,7 +67,7 @@ public class LoginView extends javax.swing.JFrame
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Personal Health Tracker Login");
 
-        userIdLabel.setText("User ID:");
+        userIdLabel.setText("Username:");
 
         passwordLabel.setText("Password:");
 
@@ -79,12 +89,12 @@ public class LoginView extends javax.swing.JFrame
                     .addComponent(forgotPasswordButton)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(userIdLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(passwordLabel))
-                        .addGap(21, 21, 21)
+                            .addComponent(passwordLabel)
+                            .addComponent(userIdLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(userIdField, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(usernameField, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(159, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -93,7 +103,7 @@ public class LoginView extends javax.swing.JFrame
                 .addGap(74, 74, 74)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(userIdLabel)
-                    .addComponent(userIdField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(usernameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(passwordLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -116,7 +126,7 @@ public class LoginView extends javax.swing.JFrame
     private javax.swing.JButton loginButton;
     private javax.swing.JPasswordField passwordField;
     private javax.swing.JLabel passwordLabel;
-    private javax.swing.JTextField userIdField;
     private javax.swing.JLabel userIdLabel;
+    private javax.swing.JTextField usernameField;
     // End of variables declaration//GEN-END:variables
 }

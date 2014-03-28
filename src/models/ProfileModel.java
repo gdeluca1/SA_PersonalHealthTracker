@@ -10,12 +10,30 @@ public class ProfileModel
     private enum ProfileItem {USERNAME, PASSWORD, QUESTION, ANSWER};
     
     private LinkedList<LinkedList<String>> profileList;
-    private String currentUserName;
+    private String currentUsername;
     
-    public ProfileModel()
+    private static ProfileModel instance;
+    
+    private static final boolean DEBUG = true;
+    
+    private ProfileModel()
     {
-        currentUserName = null;
+        currentUsername = null;
         profileList = new LinkedList<>();
+        if (DEBUG)
+        {
+            LinkedList<String> adminAccount = new LinkedList<>();
+            adminAccount.add(ProfileItem.USERNAME.ordinal(), "admin");
+            adminAccount.add(ProfileItem.PASSWORD.ordinal(), "password");
+            adminAccount.add(ProfileItem.QUESTION.ordinal(), null);
+            adminAccount.add(ProfileItem.ANSWER.ordinal(), null);
+            profileList.add(adminAccount);
+        }
+    }
+    
+    public static ProfileModel getInstance()
+    {
+        return (instance != null) ? instance : (instance = new ProfileModel());
     }
     
     /**
@@ -33,11 +51,11 @@ public class ProfileModel
         return profileList;
     }
     
-    public void createProfile(String userName, String password, String securityQuestion, String securityAnswer)
+    public void createProfile(String username, String password, String securityQuestion, String securityAnswer)
     {
         // Create a linked list containing the user's password, security question, and security answer.
         LinkedList<String> userProfile = new LinkedList<>();
-        userProfile.add(ProfileItem.USERNAME.ordinal(), userName);
+        userProfile.add(ProfileItem.USERNAME.ordinal(), username);
         userProfile.add(ProfileItem.PASSWORD.ordinal(), password);
         userProfile.add(ProfileItem.QUESTION.ordinal(), securityQuestion);
         userProfile.add(ProfileItem.ANSWER.ordinal(), securityAnswer);
@@ -46,7 +64,7 @@ public class ProfileModel
         profileList.add(userProfile);
     }
     
-    public boolean deleteProfile(String userName, String password)
+    public boolean deleteProfile(String username, String password)
     {
         AtomicBoolean toReturn = new AtomicBoolean(false);
         AtomicInteger numberProfilesDeleted = new AtomicInteger(0);
@@ -54,7 +72,7 @@ public class ProfileModel
                 .parallelStream()
                 .filter((userProfile) ->
                 {
-                    return (userProfile.get(ProfileItem.USERNAME.ordinal()).equals(userName) &&
+                    return (userProfile.get(ProfileItem.USERNAME.ordinal()).equals(username) &&
                             userProfile.get(ProfileItem.PASSWORD.ordinal()).equals(password));
                 })
                 .forEach((userProfile) ->
@@ -75,21 +93,26 @@ public class ProfileModel
         return toReturn.get();
     }
     
-    public boolean verifyProfile(String userName, String password)
+    public boolean verifyProfile(String username, String password)
     {
+        if (username == null || password == null)
+        {
+            return false;
+        }
+        
         // Check to see if any of the user profiles match the input values. 
         // Uses parallel stream for increased speed.
         boolean profileFound = profileList
                 .parallelStream()
                 .anyMatch((userProfile)->
                 {
-                    return userProfile.get(ProfileItem.USERNAME.ordinal()).equals(userName) &&
+                    return userProfile.get(ProfileItem.USERNAME.ordinal()).equals(username) &&
                             userProfile.get(ProfileItem.PASSWORD.ordinal()).equals(password);
                 });
         
         if (profileFound)
         {
-            currentUserName = userName;
+            currentUsername = username;
         }
         
         return profileFound;
@@ -97,14 +120,14 @@ public class ProfileModel
     
     public void logout()
     {
-        currentUserName = null;
+        currentUsername = null;
     }
     
     public Optional<String> getCurrentUser()
     {
-        if (currentUserName != null)
+        if (currentUsername != null)
         {
-            return Optional.of(currentUserName);
+            return Optional.of(currentUsername);
         }
         else
         {
