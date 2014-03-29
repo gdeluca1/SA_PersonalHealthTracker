@@ -35,11 +35,18 @@ public class HealthTrackerController
             {
                 return;
             }
-            
-            view.addActivityToPanel(view2.getActivity());
-            // Switch back to the default panel and reset the add activity panel.
-            view.switchMiddlePanel(HealthTrackerView.DEFAULT_PANEL);
-            view2.resetPanel();
+            else{
+                if(!view2.allFieldsEmpty()){
+                    view.addActivityToPanel(view2.getActivity());
+                    // Switch back to the default panel and reset the add activity panel.
+                    view.switchMiddlePanel(HealthTrackerView.DEFAULT_PANEL);
+                    view2.resetPanel();
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "You must enter information in at least one field", "Error", 0);
+                    return;
+                }
+            }
         });
         
         view.addViewModeButtonListener((e)->

@@ -143,6 +143,17 @@ public class AddActivityPanel extends javax.swing.JPanel
         bloodPressureTextField2.setText("");;
         bloodSugarTextField.setText("");
     }
+    
+    public boolean allFieldsEmpty(){
+        if(hoursTextField.getText().trim().equals("") && minutesTextField.getText().trim().equals("") && secondsTextField.getText().trim().equals("") 
+                && pulseTextField.getText().trim().equals("") && bloodPressureTextField1.getText().trim().equals("") 
+                && bloodPressureTextField2.getText().trim().equals("") && bloodSugarTextField.getText().trim().equals("")){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -151,9 +162,10 @@ public class AddActivityPanel extends javax.swing.JPanel
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
+    private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
         jLabel1 = new javax.swing.JLabel();
         activityComboBox = new javax.swing.JComboBox();
         jLabel2 = new javax.swing.JLabel();
@@ -177,6 +189,10 @@ public class AddActivityPanel extends javax.swing.JPanel
         submitButton = new javax.swing.JButton();
         jLabel14 = new javax.swing.JLabel();
         bloodPressureTextField2 = new javax.swing.JTextField();
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane1.setViewportView(jTextArea1);
 
         LocalDate date = LocalDate.now();
         String today = date.format(DateTimeFormatter.ofPattern("MM/dd"));
@@ -349,6 +365,8 @@ public class AddActivityPanel extends javax.swing.JPanel
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField minutesTextField;
     private javax.swing.JTextField pulseTextField;
     private javax.swing.JTextField secondsTextField;
