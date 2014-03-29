@@ -7,7 +7,7 @@
 package views;
 
 import java.time.format.DateTimeFormatter;
-import models.ActivityModel;
+import models.Activity;
 
 /**
  *
@@ -19,7 +19,7 @@ public class ActivityPanel extends javax.swing.JPanel
     /**
      * Creates new form ActivityPanel
      */
-    public ActivityPanel(ActivityModel activityModel)
+    public ActivityPanel(Activity activityModel)
     {
         initComponents();
         
@@ -27,13 +27,13 @@ public class ActivityPanel extends javax.swing.JPanel
         
         switch (activityModel.getActivity())
         {
-            case ActivityModel.ActivityType.CARDIO:
+            case Activity.ActivityType.CARDIO:
                 activityLabel.setText("Cardio @ "  + time);
                 break;
-            case ActivityModel.ActivityType.SEDENTARY:
+            case Activity.ActivityType.SEDENTARY:
                 activityLabel.setText("Sedentary @ " + time);
                 break;
-            case ActivityModel.ActivityType.STRENGTH:
+            case Activity.ActivityType.STRENGTH:
                 activityLabel.setText("Strength @ " + time);
                 break;
             default:

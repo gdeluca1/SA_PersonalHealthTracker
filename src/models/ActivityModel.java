@@ -1,57 +1,35 @@
 package models;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class ActivityModel
 {
-    public class ActivityType
+    private ArrayList<Activity> activities;
+    
+    private static ActivityModel instance = null;
+    
+    private ActivityModel()
     {
-        public static final int CARDIO = 0,
-            STRENGTH = 1,
-            SEDENTARY = 2;
+        activities = new ArrayList<>();
     }
     
-    private int activity;
-    private LocalDateTime timeStamp;
-    private String timeSpent, pulse, bloodPressure, bloodSugar;
-    
-    public ActivityModel(int activity, LocalDateTime timeStamp, String timeSpent, String pulse, String bloodPressure, String bloodSugar)
+    public static ActivityModel getInstance()
     {
-        this.activity = activity;
-        this.timeStamp = timeStamp;
-        this.timeSpent = timeSpent;
-        this.pulse = pulse;
-        this.bloodPressure = bloodPressure;
-        this.bloodSugar = bloodSugar;
+        return (instance != null) ? instance : (instance = new ActivityModel());
     }
     
-    public int getActivity()
+    public void addEntry(Activity log)
     {
-        return activity;
+        activities.add(log);
     }
 
-    public String getTimeSpent()
+    public void restoreActivities(ArrayList<Activity> activities)
     {
-        return timeSpent;
+        this.activities = activities;
     }
 
-    public String getPulse()
+    public ArrayList<Activity> getActivities()
     {
-        return pulse;
-    }
-
-    public String getBloodPressure()
-    {
-        return bloodPressure;
-    }
-
-    public String getBloodSugar()
-    {
-        return bloodSugar;
-    }
-
-    public LocalDateTime getTimeStamp()
-    {
-        return timeStamp;
+        return activities;
     }
 }

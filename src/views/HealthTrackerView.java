@@ -1,21 +1,22 @@
 package views;
 
 import java.awt.CardLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import models.ActivityFile;
 import models.ActivityModel;
+import models.Activity;
+import models.ProfileModel;
 import personalhealthtracker.PersonalHealthTracker;
 
 public class HealthTrackerView extends javax.swing.JFrame
@@ -24,9 +25,9 @@ public class HealthTrackerView extends javax.swing.JFrame
     public static final String DEFAULT_PANEL = "Default displayed JPanel";
     public static final String ADD_ACTIVITY_PANEL = "Panel for adding activities.";
     
-    private static JPanel addPanel;
+    private JPanel addPanel;
     private JPanel middlePanel;
-    private static JPanel defaultMiddlePanel;
+    private JPanel defaultMiddlePanel;
     
     /**
      * Creates new form HealthTrackerController2
@@ -62,7 +63,46 @@ public class HealthTrackerView extends javax.swing.JFrame
         // Center the frame in the middle of the screen.
         setLocation(screenSize.width/2 - getWidth()/2, screenSize.height/2 - getHeight()/2);
         
-        ActivityFile.getInstance();
+        ActivityModel.getInstance();
+        
+        // Add a window listener. When the user attempts to x out, make sure they want to logout.
+        addWindowListener(new WindowListener()
+        {
+
+            @Override
+            public void windowOpened(WindowEvent e) {}
+
+            @Override
+            public void windowClosing(WindowEvent e) 
+            {
+                int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to logout?", "Logout", JOptionPane.YES_NO_OPTION);
+                if (confirm == JOptionPane.YES_OPTION)
+                {
+                    ProfileModel.getInstance().logout();
+                    dispose();
+                    System.exit(0);
+                }
+                else
+                {
+                    setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+                }
+            }
+
+            @Override
+            public void windowClosed(WindowEvent e) {}
+
+            @Override
+            public void windowIconified(WindowEvent e) {}
+
+            @Override
+            public void windowDeiconified(WindowEvent e) {}
+
+            @Override
+            public void windowActivated(WindowEvent e) {}
+
+            @Override
+            public void windowDeactivated(WindowEvent e) {}
+        });
     }
     
     static 
@@ -71,8 +111,9 @@ public class HealthTrackerView extends javax.swing.JFrame
         screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     }
     
-    public static void addActivityPanel(ActivityModel activity)
+    public void addActivityPanel(Activity activity)
     {
+        ActivityModel.getInstance().addEntry(activity);
         ActivityPanel panel = new ActivityPanel(activity);
         defaultMiddlePanel.add(panel);
     }

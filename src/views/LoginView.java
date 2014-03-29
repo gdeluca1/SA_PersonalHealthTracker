@@ -46,6 +46,21 @@ public class LoginView extends javax.swing.JFrame
         loginButton.addActionListener(listener);
     }
     
+    public void addForgotPasswordButtonListener(ActionListener listener)
+    {
+        forgotPasswordButton.addActionListener(listener);
+    }
+    
+    public void addCreateAccountButtonListener(ActionListener listener)
+    {
+        createAccountButton.addActionListener(listener);
+    }
+    
+    public void addDeleteAccountButtonListener(ActionListener listener)
+    {
+        deleteAccountButton.addActionListener(listener);
+    }
+    
     public String getUsername()
     {
         return usernameField.getText();
@@ -76,6 +91,7 @@ public class LoginView extends javax.swing.JFrame
         loginButton = new javax.swing.JButton();
         forgotPasswordButton = new javax.swing.JButton();
         createAccountButton = new javax.swing.JButton();
+        deleteAccountButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Personal Health Tracker Login");
@@ -90,6 +106,8 @@ public class LoginView extends javax.swing.JFrame
 
         createAccountButton.setText("Create Account");
 
+        deleteAccountButton.setText("Delete Account");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -97,18 +115,22 @@ public class LoginView extends javax.swing.JFrame
             .addGroup(layout.createSequentialGroup()
                 .addGap(109, 109, 109)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(deleteAccountButton)
                     .addComponent(createAccountButton)
-                    .addComponent(loginButton)
-                    .addComponent(forgotPasswordButton)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(passwordLabel)
-                            .addComponent(userIdLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(passwordLabel)
+                                .addComponent(userIdLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(loginButton)
+                                .addGap(9, 9, 9)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(usernameField, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(159, Short.MAX_VALUE))
+                            .addComponent(usernameField, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(forgotPasswordButton))
+                .addContainerGap(175, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -121,13 +143,15 @@ public class LoginView extends javax.swing.JFrame
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(passwordLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(loginButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(forgotPasswordButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(createAccountButton)
-                .addContainerGap(67, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(deleteAccountButton)
+                .addContainerGap(41, Short.MAX_VALUE))
         );
 
         pack();
@@ -135,6 +159,7 @@ public class LoginView extends javax.swing.JFrame
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton createAccountButton;
+    private javax.swing.JButton deleteAccountButton;
     private javax.swing.JButton forgotPasswordButton;
     private javax.swing.JButton loginButton;
     private javax.swing.JPasswordField passwordField;

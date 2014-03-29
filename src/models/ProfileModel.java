@@ -17,7 +17,7 @@ public class ProfileModel
     /**
      * Setting this variable to true adds the admin account to the profileList.
      */
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     
     /**
      * This class is a singleton class. Instances may only be obtained using 
@@ -127,6 +127,8 @@ public class ProfileModel
     
     public void logout()
     {
+        LogManager.getInstance().saveActivities();
+        LogManager.getInstance().saveUserList();
         currentUsername = null;
     }
     
@@ -140,5 +142,15 @@ public class ProfileModel
         {
             return Optional.empty();
         }
+    }
+    
+    /**
+     * Returns true if there are any profiles in
+     * the profile list.
+     * @return 
+     */
+    public boolean anyProfilesRegistered()
+    {
+        return ! profileList.isEmpty();
     }
 }
