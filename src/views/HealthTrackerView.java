@@ -24,8 +24,9 @@ public class HealthTrackerView extends javax.swing.JFrame
     private static final Dimension screenSize;
     public static final String DEFAULT_PANEL = "Default displayed JPanel";
     public static final String ADD_ACTIVITY_PANEL = "Panel for adding activities.";
+    private String currentPanel;
     
-    private JPanel addPanel;
+    private AddActivityPanel addActivityPanel;
     private JPanel middlePanel;
     private JPanel defaultMiddlePanel;
     
@@ -34,6 +35,7 @@ public class HealthTrackerView extends javax.swing.JFrame
      */
     public HealthTrackerView()
     {
+        currentPanel = DEFAULT_PANEL;
         middlePanel = new JPanel();
         
         initComponents();
@@ -49,16 +51,14 @@ public class HealthTrackerView extends javax.swing.JFrame
         }
         
         defaultMiddlePanel = new JPanel();
-        addPanel = new JPanel();
+        addActivityPanel = new AddActivityPanel();
         
         defaultMiddlePanel.setLayout(new BoxLayout(defaultMiddlePanel, BoxLayout.Y_AXIS));
 //        addPanel.add(new JButton("Test 2"));
         
         middlePanel.setLayout(new CardLayout());
         middlePanel.add(defaultMiddlePanel, DEFAULT_PANEL);
-        middlePanel.add(addPanel, ADD_ACTIVITY_PANEL);
-        
-//        ((CardLayout) middlePanel.getLayout()).show(middlePanel, ADD_ACTIVITY_PANEL);
+        middlePanel.add(addActivityPanel, ADD_ACTIVITY_PANEL);
         
         // Center the frame in the middle of the screen.
         setLocation(screenSize.width/2 - getWidth()/2, screenSize.height/2 - getHeight()/2);
@@ -103,6 +103,12 @@ public class HealthTrackerView extends javax.swing.JFrame
             @Override
             public void windowDeactivated(WindowEvent e) {}
         });
+        
+        // If there were activities saved from last time, display them to the user.
+        if (! ActivityModel.getInstance().getActivities().isEmpty())
+        {
+            ActivityModel.getInstance().getActivities().forEach((activity) -> defaultMiddlePanel.add(new ActivityPanel(activity)));
+        }
     }
     
     static 
@@ -111,11 +117,35 @@ public class HealthTrackerView extends javax.swing.JFrame
         screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     }
     
-    public void addActivityPanel(Activity activity)
+    public final void addActivityToPanel(Activity activity)
     {
         ActivityModel.getInstance().addEntry(activity);
         ActivityPanel panel = new ActivityPanel(activity);
         defaultMiddlePanel.add(panel);
+    }
+
+    public AddActivityPanel getAddActivityPanel()
+    {
+        return addActivityPanel;
+    }
+    
+    /**
+     * Switch the card layout to display a new panel.
+     * @param newPanel A string from the HealthTrackerView class.
+     */
+    public void switchMiddlePanel(String newPanel)
+    {
+        ((CardLayout) middlePanel.getLayout()).show(middlePanel, newPanel);
+        currentPanel = newPanel;
+    }
+    
+    /**
+     * Is the middle panel current displaying the default panel?
+     * @return true if the middle panel is displaying the default panel.
+     */
+    public boolean displayingPanel(String panel)
+    {
+        return currentPanel.equals(panel);
     }
     
     public void updateDateLabel(String date)

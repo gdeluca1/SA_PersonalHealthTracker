@@ -132,16 +132,9 @@ public class ProfileModel
         currentUsername = null;
     }
     
-    public Optional<String> getCurrentUser()
+    public String getCurrentUser()
     {
-        if (currentUsername != null)
-        {
-            return Optional.of(currentUsername);
-        }
-        else
-        {
-            return Optional.empty();
-        }
+        return currentUsername;
     }
     
     /**

@@ -1,8 +1,9 @@
 package models;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class Activity
+public class Activity implements Serializable
 {
     public class ActivityType
     {

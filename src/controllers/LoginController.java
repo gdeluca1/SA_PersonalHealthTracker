@@ -1,6 +1,7 @@
 package controllers;
 
 import javax.swing.JOptionPane;
+import models.LogManager;
 import models.ProfileModel;
 import views.HealthTrackerView;
 import views.LoginView;
@@ -15,9 +16,11 @@ public class LoginController
             if (ProfileModel.getInstance().verifyProfile(view.getUsername(), view.getPassword()))
             {
                 view.dispose();
+                // Make sure to load the activites from the last session.
+                LogManager.getInstance().loadActivities();
                 HealthTrackerView healthTrackerView = new HealthTrackerView();
                 healthTrackerView.setVisible(true);
-                HealthTrackerController controller = new HealthTrackerController(healthTrackerView);
+                HealthTrackerController controller = new HealthTrackerController(healthTrackerView, healthTrackerView.getAddActivityPanel());
             }
             
             else

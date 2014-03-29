@@ -41,9 +41,9 @@ public class ActivityPanel extends javax.swing.JPanel
         }
         
         durationLabel.setText(activityModel.getTimeSpent());
-        pulseLabel.setText(activityModel.getPulse());
+        pulseLabel.setText(activityModel.getPulse() + " bpm");
         bloodPressureLabel.setText(activityModel.getBloodPressure());
-        bloodSugarLabel.setText(activityModel.getBloodSugar());
+        bloodSugarLabel.setText(activityModel.getBloodSugar() + "mg/dl");
     }
 
     /**

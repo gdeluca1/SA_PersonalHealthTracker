@@ -16,6 +16,9 @@ public class LogManager
 {
     private static LogManager instance = null;
     
+    // Set to true to display debugging messages.
+    private static final boolean DEBUG = false;
+    
     private LogManager() {}
     
     public static LogManager getInstance()
@@ -29,7 +32,7 @@ public class LogManager
      */
     public void loadUserList()
     {
-        File loadFile = new File(new File(System.getProperty("user.home")), "users.dat");
+        File loadFile = new File(new File(System.getProperty("user.home")), "/PersonalHealthTracker/" + "users.dat");
         if (loadFile.exists())
         {
             FileInputStream fIn = null;
@@ -39,6 +42,10 @@ public class LogManager
                 fIn = new FileInputStream(loadFile);
                 ObjectInputStream in = new ObjectInputStream(fIn);
                 ProfileModel.getInstance().restoreProfileList((LinkedList<LinkedList<String>>)in.readObject());
+                if (DEBUG)
+                {
+                    System.out.println("Read: " + ProfileModel.getInstance().getProfileList().size() + " profiles.");
+                }
             }
             catch (FileNotFoundException ex)
             {
@@ -67,7 +74,7 @@ public class LogManager
     
     public void saveUserList()
     {
-        File saveFile = new File(new File(System.getProperty("user.home")), "users.dat");
+        File saveFile = new File(new File(System.getProperty("user.home")), "/PersonalHealthTracker/" + "users.dat");
         if (ProfileModel.getInstance().anyProfilesRegistered())
         {
             FileOutputStream fOut = null;
@@ -76,6 +83,10 @@ public class LogManager
                 fOut = new FileOutputStream(saveFile);
                 ObjectOutputStream out = new ObjectOutputStream(fOut);
                 out.writeObject(ProfileModel.getInstance().getProfileList());
+                if (DEBUG)
+                {
+                    System.out.println("Wrote: " + ProfileModel.getInstance().getProfileList().size() + " profiles.");
+                }
             }
             catch (FileNotFoundException ex)
             {
@@ -104,7 +115,7 @@ public class LogManager
     
     public void loadActivities()
     {
-        File loadFile = new File(new File(System.getProperty("user.home")), ProfileModel.getInstance().getCurrentUser() + ".dat");
+        File loadFile = new File(new File(System.getProperty("user.home")), "/PersonalHealthTracker/" + ProfileModel.getInstance().getCurrentUser() + ".dat");
         if (loadFile.exists())
         {
             FileInputStream fIn = null;
@@ -112,6 +123,10 @@ public class LogManager
                 fIn = new FileInputStream(loadFile);
                 ObjectInputStream in = new ObjectInputStream(fIn);
                 ActivityModel.getInstance().restoreActivities((ArrayList<Activity>) in.readObject());
+                if (DEBUG)
+                {
+                    System.out.println("Read: " + ActivityModel.getInstance().getActivities().size() + " activities.");
+                }
             }
             catch (FileNotFoundException ex) {
                 Logger.getLogger(LogManager.class.getName()).log(Level.SEVERE, null, ex);
@@ -140,7 +155,7 @@ public class LogManager
     public void saveActivities()
     {
         // Save the state to a file named after their username on their home directory.
-        File saveFile = new File(new File(System.getProperty("user.home")), ProfileModel.getInstance().getCurrentUser() + ".dat");
+        File saveFile = new File(new File(System.getProperty("user.home")), "/PersonalHealthTracker/" + ProfileModel.getInstance().getCurrentUser() + ".dat");
         if (! ActivityModel.getInstance().getActivities().isEmpty())
         {
             FileOutputStream fOut = null;
@@ -149,6 +164,10 @@ public class LogManager
                 fOut = new FileOutputStream(saveFile);
                 ObjectOutputStream out = new ObjectOutputStream(fOut);
                 out.writeObject(ActivityModel.getInstance().getActivities());
+                if (DEBUG)
+                {
+                    System.out.println("Wrote: " + ActivityModel.getInstance().getActivities().size() + " activities.");
+                }
             }
             catch (FileNotFoundException ex)
             {
