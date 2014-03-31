@@ -29,23 +29,19 @@ public class HealthTrackerController
         
         view2.addSubmitButtonListener((e) ->
         {
-            // Make sure the user actually wants to add this activity.
-            int choice = JOptionPane.showConfirmDialog(null, "Are you sure you would like to add this activity?");
-            if (choice != JOptionPane.YES_OPTION) 
+            // Can't add a blank activity.
+            if (view2.allFieldsEmpty())
             {
-                return;
+                JOptionPane.showMessageDialog(null, "You must enter information in at least one field", "Error", 0);
             }
-            else{
-                if(!view2.allFieldsEmpty()){
-                    view.addActivityToPanel(view2.getActivity());
-                    // Switch back to the default panel and reset the add activity panel.
-                    view.switchMiddlePanel(HealthTrackerView.DEFAULT_PANEL);
-                    view2.resetPanel();
-                }
-                else{
-                    JOptionPane.showMessageDialog(null, "You must enter information in at least one field", "Error", 0);
-                    return;
-                }
+            
+            // Make sure the user actually wants to add this activity.
+            else if (JOptionPane.showConfirmDialog(null, "Are you sure you would like to add this activity?") == JOptionPane.YES_OPTION) 
+            {
+                view.addActivityToPanel(view2.getActivity());
+                // Switch back to the default panel and reset the add activity panel.
+                view.switchMiddlePanel(HealthTrackerView.DEFAULT_PANEL);
+                view2.resetPanel();
             }
         });
         

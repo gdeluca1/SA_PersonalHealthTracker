@@ -144,15 +144,14 @@ public class AddActivityPanel extends javax.swing.JPanel
         bloodSugarTextField.setText("");
     }
     
+    /**
+     * Checks each field. If nothing has been input, return true.
+     * @return True if all the fields are empty.
+     */
     public boolean allFieldsEmpty(){
-        if(hoursTextField.getText().trim().equals("") && minutesTextField.getText().trim().equals("") && secondsTextField.getText().trim().equals("") 
+        return (hoursTextField.getText().trim().equals("") && minutesTextField.getText().trim().equals("") && secondsTextField.getText().trim().equals("") 
                 && pulseTextField.getText().trim().equals("") && bloodPressureTextField1.getText().trim().equals("") 
-                && bloodPressureTextField2.getText().trim().equals("") && bloodSugarTextField.getText().trim().equals("")){
-            return true;
-        }
-        else{
-            return false;
-        }
+                && bloodPressureTextField2.getText().trim().equals("") && bloodSugarTextField.getText().trim().equals(""));
     }
 
     /**
