@@ -5,6 +5,9 @@ import java.time.LocalDateTime;
 
 public class Activity implements Serializable
 {
+    // Add a serial version UID to prevent deserialization issues.
+    private static final long serialVersionUID = 394388108L;
+    
     public class ActivityType
     {
         public static final int CARDIO = 0,

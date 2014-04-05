@@ -1,5 +1,6 @@
 package views;
 
+import controllers.HealthTrackerController;
 import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -24,11 +25,14 @@ public class HealthTrackerView extends javax.swing.JFrame
     private static final Dimension screenSize;
     public static final String DEFAULT_PANEL = "Default displayed JPanel";
     public static final String ADD_ACTIVITY_PANEL = "Panel for adding activities.";
+    public static final String RECEIVE_ACTIVITY_PANEL = "Panel for receiving activities from the mobile app version.";
     private String currentPanel;
     
     private AddActivityPanel addActivityPanel;
     private JPanel middlePanel;
     private JPanel defaultMiddlePanel;
+    
+    private ActivityReceiverView activityReceiverView;
     
     /**
      * Creates new form HealthTrackerController2
@@ -52,6 +56,7 @@ public class HealthTrackerView extends javax.swing.JFrame
         
         defaultMiddlePanel = new JPanel();
         addActivityPanel = new AddActivityPanel();
+        activityReceiverView = new ActivityReceiverView();
         
         defaultMiddlePanel.setLayout(new BoxLayout(defaultMiddlePanel, BoxLayout.Y_AXIS));
 //        addPanel.add(new JButton("Test 2"));
@@ -59,6 +64,7 @@ public class HealthTrackerView extends javax.swing.JFrame
         middlePanel.setLayout(new CardLayout());
         middlePanel.add(defaultMiddlePanel, DEFAULT_PANEL);
         middlePanel.add(addActivityPanel, ADD_ACTIVITY_PANEL);
+        middlePanel.add(activityReceiverView, RECEIVE_ACTIVITY_PANEL);
         
         // Center the frame in the middle of the screen.
         setLocation(screenSize.width/2 - getWidth()/2, screenSize.height/2 - getHeight()/2);
@@ -75,13 +81,22 @@ public class HealthTrackerView extends javax.swing.JFrame
             @Override
             public void windowClosing(WindowEvent e) 
             {
+                // If any data transfers are still running, don't let the user close out.
+                if (! HealthTrackerController.close())
+                {
+                    setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+                    return;
+                }
                 int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to logout?", "Logout", JOptionPane.YES_NO_OPTION);
                 if (confirm == JOptionPane.YES_OPTION)
                 {
+                    // Logout and save the user data.
                     ProfileModel.getInstance().logout();
+                    // Garbage collect.
                     dispose();
                     System.exit(0);
                 }
+                // If the user doesn't want to log out, don't let the window close.
                 else
                 {
                     setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -117,6 +132,11 @@ public class HealthTrackerView extends javax.swing.JFrame
         screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     }
     
+    /**
+     * Creates a new activity panel for the activity AND adds the
+     * activity to the activity list in ActivityModel.
+     * @param activity 
+     */
     public final void addActivityToPanel(Activity activity)
     {
         ActivityModel.getInstance().addEntry(activity);
@@ -130,11 +150,44 @@ public class HealthTrackerView extends javax.swing.JFrame
     }
     
     /**
+     * Start running the progress bar while receiving activities from the phone.
+     */
+    public void startProgressBar()
+    {
+        activityReceiverView.getProgressBar().setEnabled(true);
+        activityReceiverView.getProgressBar().setIndeterminate(true);
+    }
+    
+    /**
+     * This method stops the progress bar and disables it.
+     */
+    public void stopProgressBar()
+    {
+        activityReceiverView.getProgressBar().setEnabled(false);
+        activityReceiverView.getProgressBar().setIndeterminate(false);
+    }
+    
+    /**
+     * Returns true if the progress bar is running.
+     * If this method returns true, you are currently receiving data. Don't allow
+     * the user to exit the program if information is being transferred to avoid
+     * any information corruption.
+     * @return 
+     */
+    public boolean progressBarIsRunning()
+    {
+        return activityReceiverView.getProgressBar().isIndeterminate();
+    }
+    
+    /**
      * Switch the card layout to display a new panel.
      * @param newPanel A string from the HealthTrackerView class.
      */
     public void switchMiddlePanel(String newPanel)
     {
+        // Make sure to close any open sockets and that no data is being transferred.
+        HealthTrackerController.close();
+        
         ((CardLayout) middlePanel.getLayout()).show(middlePanel, newPanel);
         currentPanel = newPanel;
     }
