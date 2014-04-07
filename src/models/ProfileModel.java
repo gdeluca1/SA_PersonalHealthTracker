@@ -15,7 +15,7 @@ public class ProfileModel
     private static ProfileModel instance;
     
     /**
-     * Setting this variable to true adds the admin account to the profileList.
+     * Setting this variable to true adds the admin account to the profileList..
      */
     private static final boolean DEBUG = false;
     
