@@ -75,6 +75,7 @@ public class LogManager
     public void saveUserList()
     {
         File saveFile = new File(new File(System.getProperty("user.home")), "/PersonalHealthTracker/" + "users.dat");
+        saveFile.getParentFile().mkdir();
         if (ProfileModel.getInstance().anyProfilesRegistered())
         {
             FileOutputStream fOut = null;
@@ -156,6 +157,7 @@ public class LogManager
     {
         // Save the state to a file named after their username on their home directory.
         File saveFile = new File(new File(System.getProperty("user.home")), "/PersonalHealthTracker/" + ProfileModel.getInstance().getCurrentUser() + ".dat");
+        saveFile.getParentFile().mkdir();
         if (! ActivityModel.getInstance().getActivities().isEmpty())
         {
             FileOutputStream fOut = null;
