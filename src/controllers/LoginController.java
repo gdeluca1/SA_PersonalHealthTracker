@@ -2,6 +2,7 @@ package controllers;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.util.LinkedList;
 import javax.swing.JOptionPane;
 import models.LogManager;
 import models.ProfileModel;
@@ -71,6 +72,39 @@ public class LoginController
             });
             
             dialog.setVisible(true);
+        });
+        
+        view.addDeleteAccountButtonListener((e) -> 
+        {
+            if (view.getUsername().trim().equals("") || view.getPassword().trim().equals(""))
+            {
+                JOptionPane.showMessageDialog(null, "Please enter your username and password in the dialog box.");
+                return;
+            }
+            
+            int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete " + view.getUsername() + "'s account? "
+                    + "This action cannot be undone.");
+            if (result != JOptionPane.YES_OPTION)
+            {
+                return;
+            }
+            boolean deletedSuccessfully = ProfileModel.getInstance().deleteProfile(view.getUsername(), view.getPassword());
+            if (! deletedSuccessfully)
+            {
+                JOptionPane.showMessageDialog(null, "That username/password were not recognized.");
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(null, "Account successfully deleted!");
+                LogManager.getInstance().saveUserList();
+                LogManager.getInstance().deleteAccountFile(view.getUsername());
+                view.clearFields();
+            }
+        });
+        
+        view.addForgotPasswordButtonListener((e) ->
+        {
+            
         });
     }
 }

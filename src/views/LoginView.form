@@ -40,7 +40,6 @@
                               <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="passwordField" alignment="0" min="-2" pref="151" max="-2" attributes="0"/>
                           <Component id="usernameField" alignment="0" min="-2" pref="151" max="-2" attributes="0"/>

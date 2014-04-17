@@ -61,6 +61,12 @@ public class LoginView extends javax.swing.JFrame
         deleteAccountButton.addActionListener(listener);
     }
     
+    public void clearFields()
+    {
+        usernameField.setText("");
+        passwordField.setText("");
+    }
+    
     public String getUsername()
     {
         return usernameField.getText();

@@ -195,4 +195,15 @@ public class LogManager
             }
         }
     }
+    
+    /**
+     * Deletes the user's file. Returns false if it failed.
+     * @param username
+     * @return 
+     */
+    public boolean deleteAccountFile(String username)
+    {
+        File loadFile = new File(new File(System.getProperty("user.home")), "/PersonalHealthTracker/" + username + ".dat");
+        return loadFile.delete();
+    }
 }
