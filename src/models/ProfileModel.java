@@ -1,7 +1,6 @@
 package models;
 
 import java.util.LinkedList;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -58,8 +57,28 @@ public class ProfileModel
         return profileList;
     }
     
-    public void createProfile(String username, String password, String securityQuestion, String securityAnswer)
+    /**
+     * Attempts to create a profile. Returns false if creation failed (creation
+     * will fail if the specified username is already registered).
+     * @param username
+     * @param password
+     * @param securityQuestion
+     * @param securityAnswer
+     * @return 
+     */
+    public boolean createProfile(String username, String password, String securityQuestion, String securityAnswer)
     {
+        boolean toReturn = ! profileList
+                .parallelStream()
+                .anyMatch((userProfile) ->
+                {
+                    return (userProfile.get(ProfileItem.USERNAME.ordinal()).equals(username));
+                });
+        
+        // If the profile already exists, return false.
+        if (! toReturn)
+            return toReturn;
+        
         // Create a linked list containing the user's password, security question, and security answer.
         LinkedList<String> userProfile = new LinkedList<>();
         userProfile.add(ProfileItem.USERNAME.ordinal(), username);
@@ -69,6 +88,8 @@ public class ProfileModel
         
         // Add the user's profile to the linked list.
         profileList.add(userProfile);
+        
+        return toReturn;
     }
     
     public boolean deleteProfile(String username, String password)
