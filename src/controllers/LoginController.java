@@ -3,9 +3,14 @@ package controllers;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.LinkedList;
+import java.util.Optional;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import models.LogManager;
 import models.ProfileModel;
+import views.ChangePasswordPanel;
 import views.CreateAccountDialog;
 import views.HealthTrackerView;
 import views.LoginView;
@@ -61,6 +66,7 @@ public class LoginController
                     else
                     {
                         JOptionPane.showMessageDialog(null, "Account successfully created!");
+                        LogManager.getInstance().saveUserList();
                         dialog.setVisible(false);
                         dialog.dispose();
                     }
@@ -104,7 +110,41 @@ public class LoginController
         
         view.addForgotPasswordButtonListener((e) ->
         {
+            if (view.getUsername().trim().equals(""))
+            {
+                JOptionPane.showMessageDialog(null, "Please enter your username first.");
+                return;
+            }
             
+            Optional<LinkedList<String>> profile = ProfileModel.getInstance().getProfile(view.getUsername());
+            if (! profile.isPresent())
+            {
+                JOptionPane.showMessageDialog(null, "Username not recognized.");
+                return;
+            }
+            
+            String answer = JOptionPane.showInputDialog(profile.get().get(ProfileModel.ProfileItem.QUESTION.ordinal()));
+            if (answer == null) return;
+            
+            if (answer.equals(profile.get().get(ProfileModel.ProfileItem.ANSWER.ordinal())))
+            {
+                // User correctly entered the answer to the question. Prompt for a new password.
+                ChangePasswordPanel panel = new ChangePasswordPanel();
+                String[] options = new String[] {"Confirm", "Cancel"};
+                int choice = JOptionPane.showOptionDialog(null, panel, "Change password",
+                        JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[1]);
+                
+                if (choice == 0)
+                {
+                    String newPassword = panel.getPassword();
+                    ProfileModel.getInstance().changePassword(view.getUsername(), newPassword);
+                    JOptionPane.showMessageDialog(null, "Successfully changed password!");
+                }
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(null, "Your answer was incorrect.");
+            }
         });
     }
 }

@@ -1,12 +1,13 @@
 package models;
 
 import java.util.LinkedList;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ProfileModel
 {
-    private enum ProfileItem {USERNAME, PASSWORD, QUESTION, ANSWER};
+    public enum ProfileItem {USERNAME, PASSWORD, QUESTION, ANSWER};
     
     private LinkedList<LinkedList<String>> profileList;
     private String currentUsername;
@@ -90,6 +91,33 @@ public class ProfileModel
         profileList.add(userProfile);
         
         return toReturn;
+    }
+    
+    public Optional<LinkedList<String>> getProfile(String username)
+    {
+        Optional<LinkedList<String>> toReturn = profileList
+                .parallelStream()
+                .filter((LinkedList<String> profile) ->
+                {
+                    return profile.get(ProfileItem.USERNAME.ordinal()).equals(username);
+                })
+                .findAny();
+        
+        return toReturn;
+    }
+    
+    public void changePassword(String username, String newPassword)
+    {
+        profileList
+                .parallelStream()
+                .filter((LinkedList<String> profile) ->
+                {
+                    return profile.get(ProfileItem.USERNAME.ordinal()).equals(username);
+                })
+                .forEach((profile) ->
+                {
+                    profile.set(ProfileItem.PASSWORD.ordinal(), newPassword);
+                });
     }
     
     public boolean deleteProfile(String username, String password)
