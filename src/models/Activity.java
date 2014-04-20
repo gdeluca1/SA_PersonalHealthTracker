@@ -10,7 +10,8 @@ public class Activity implements Serializable
     
     public class ActivityType
     {
-        public static final int CARDIO = 0,
+        public static final int 
+            CARDIO = 0,
             STRENGTH = 1,
             SEDENTARY = 2;
     }
