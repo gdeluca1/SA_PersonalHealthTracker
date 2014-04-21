@@ -10,6 +10,8 @@ import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,15 +30,19 @@ public class CalendarPanel
     private static JPanel currentPanel = null;
     private static int month = -1, day = -1, year = -1;
     private static JDialog frame = null;
+    private static HealthTrackerView parent;
     
-    public static void showPanel()
+    public static void showPanel(HealthTrackerView parent)
     {
+        CalendarPanel.parent = parent;
+        
         // Make the default values today.
         if (month == -1 || year == -1 || day == -1)
         {
             month = Calendar.getInstance().get(Calendar.MONTH);
             day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
             year = Calendar.getInstance().get(Calendar.YEAR);
+            parent.updateDateLabel(LocalDate.of(year, month + 1, day).format(DateTimeFormatter.ofPattern("MM/dd/yyyy")));
         }
         if (frame != null)
         {
@@ -136,6 +142,7 @@ public class CalendarPanel
                     monthPanel.add(daysPanel, BorderLayout.SOUTH);
                     
                     label.setText(monthNames[month] + " " + year);
+                    parent.updateDateLabel(LocalDate.of(year, month + 1, day).format(DateTimeFormatter.ofPattern("MM/dd/yyyy")));
                     
                     // Validate and repaint to make the changes visible to the user.
                     frame.pack();
@@ -157,6 +164,7 @@ public class CalendarPanel
                     monthPanel.add(daysPanel, BorderLayout.SOUTH);
                     
                     label.setText(monthNames[month] + " " + year);
+                    parent.updateDateLabel(LocalDate.of(year, month + 1, day).format(DateTimeFormatter.ofPattern("MM/dd/yyyy")));
                     
                     // Validate and repaint to make the changes visible to the user.
                     frame.pack();
@@ -246,6 +254,7 @@ public class CalendarPanel
                         }
                         
                         day = Integer.parseInt(currentLabel.getText().trim());
+                        parent.updateDateLabel(LocalDate.of(year, month + 1, day).format(DateTimeFormatter.ofPattern("MM/dd/yyyy")));
                         
                         if (previousPanel != null)
                         {

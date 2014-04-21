@@ -2,7 +2,6 @@ package personalhealthtracker;
 
 import controllers.HealthTrackerController;
 import controllers.LoginController;
-import javax.swing.JFrame;
 import models.LogManager;
 import models.ProfileModel;
 import views.HealthTrackerView;

@@ -34,7 +34,7 @@ public class HealthTrackerController
         
         view.addCalendarButtonListener((e)->
         {
-            CalendarPanel.showPanel();
+            CalendarPanel.showPanel(view);
         });
         
         view.addAddActivityButtonListener((e)->
