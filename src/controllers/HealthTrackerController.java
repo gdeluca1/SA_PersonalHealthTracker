@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import models.Activity;
 import views.AddActivityPanel;
+import views.CalendarPanel;
 import views.HealthTrackerView;
 
 public class HealthTrackerController
@@ -33,8 +34,7 @@ public class HealthTrackerController
         
         view.addCalendarButtonListener((e)->
         {
-            JOptionPane.showMessageDialog(null,
-                    "This button will display a calendar so you can change the viewing date.");
+            CalendarPanel.showPanel();
         });
         
         view.addAddActivityButtonListener((e)->
