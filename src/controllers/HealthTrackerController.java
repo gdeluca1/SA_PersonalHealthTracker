@@ -1,5 +1,7 @@
 package controllers;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.ServerSocket;
@@ -9,7 +11,11 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ButtonGroup;
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import models.Activity;
 import views.AddActivityPanel;
 import views.CalendarPanel;
@@ -65,12 +71,50 @@ public class HealthTrackerController
                 view.switchMiddlePanel(HealthTrackerView.DEFAULT_PANEL);
                 view2.resetPanel();
             }
+            
+            view.updateVisibleActivities(false);
         });
         
         view.addViewModeButtonListener((e)->
         {
-            JOptionPane.showMessageDialog(null,
-                    "Change between daily, weekly, and monthly viewing of your data.");
+            JRadioButton weeklyButton = new JRadioButton("Weekly Viewing"), 
+                    monthlyButton = new JRadioButton("Monthly Viewing"),
+                    yearlyButton = new JRadioButton("Yearly Viewing");
+            
+            ButtonGroup buttonGroup = new ButtonGroup();
+            buttonGroup.add(weeklyButton);
+            buttonGroup.add(monthlyButton);
+            buttonGroup.add(yearlyButton);
+            
+            switch (view.getViewMode()) 
+            {
+                case HealthTrackerView.MONTHLY:
+                    monthlyButton.setSelected(true);
+                    break;
+                case HealthTrackerView.YEARLY:
+                    yearlyButton.setSelected(true);
+                    break;
+                default: // WEEKLY
+                    weeklyButton.setSelected(true);
+                    break;
+            }
+            
+            JPanel buttonPanel = new JPanel();
+            buttonPanel.add(weeklyButton);
+            buttonPanel.add(monthlyButton);
+            buttonPanel.add(yearlyButton);
+            
+            JDialog dialog = new JDialog();
+            dialog.setTitle("Select Viewing Mode");
+            dialog.add(buttonPanel);
+            dialog.pack();
+            dialog.setModal(true);
+            
+            // Put the dialog in the middle of the screen.
+            Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+            dialog.setLocation(d.width/2 - dialog.getWidth()/2, d.height/2 - dialog.getHeight()/2);
+            
+            dialog.setVisible(true);
         });
         
         view.addTrendingButtonListener((e)->
@@ -85,6 +129,7 @@ public class HealthTrackerController
                     "This button will allow you to print your data.");
         });
         
+        // Note: The import button is solely for Gennaro's and Sumbhav's CSE 360 Honors Contract.
         // Add a lambda expression as an action listener to the Import button.
         view.addImportButtonListener((e)->
         {

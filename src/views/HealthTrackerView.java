@@ -8,8 +8,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -33,6 +39,11 @@ public class HealthTrackerView extends javax.swing.JFrame
     private JPanel defaultMiddlePanel;
     
     private ActivityReceiverView activityReceiverView;
+    
+    public static final int WEEKLY = -1, MONTHLY = 0, YEARLY = 1;
+    
+    // Either weekly, monthly, or yearly.
+    private int viewMode = WEEKLY;
     
     /**
      * Creates new form HealthTrackerController2
@@ -59,7 +70,6 @@ public class HealthTrackerView extends javax.swing.JFrame
         activityReceiverView = new ActivityReceiverView();
         
         defaultMiddlePanel.setLayout(new BoxLayout(defaultMiddlePanel, BoxLayout.Y_AXIS));
-//        addPanel.add(new JButton("Test 2"));
         
         middlePanel.setLayout(new CardLayout());
         middlePanel.add(defaultMiddlePanel, DEFAULT_PANEL);
@@ -122,7 +132,8 @@ public class HealthTrackerView extends javax.swing.JFrame
         // If there were activities saved from last time, display them to the user.
         if (! ActivityModel.getInstance().getActivities().isEmpty())
         {
-            ActivityModel.getInstance().getActivities().forEach((activity) -> defaultMiddlePanel.add(new ActivityPanel(activity)));
+            updateVisibleActivities(true);
+//            ActivityModel.getInstance().getActivities().forEach((activity) -> defaultMiddlePanel.add(new ActivityPanel(activity)));
         }
     }
     
@@ -142,6 +153,106 @@ public class HealthTrackerView extends javax.swing.JFrame
         ActivityModel.getInstance().addEntry(activity);
         ActivityPanel panel = new ActivityPanel(activity);
         defaultMiddlePanel.add(panel);
+    }
+    
+    public final void updateVisibleActivities(boolean firstTime)
+    {
+        try
+        {
+            // Remove all the activities from the panel first.
+            defaultMiddlePanel.removeAll();
+            ActivityModel.getInstance().getVisibleActivities().clear();
+            
+            int day = CalendarPanel.getDay(), 
+                    month = CalendarPanel.getMonth(),
+                    year = CalendarPanel.getYear();
+            
+            // Use a calendar object to get the day of the week.
+            Calendar c = Calendar.getInstance();
+            
+            // Parse the date from the date label.
+            c.setTime(new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH).parse(dateLabel.getText()));
+            // Day = 1 for Sunday, 7 for Saturday.
+            int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+            
+            ActivityModel.
+                    getInstance().
+                    getActivities()
+                    .stream()
+                    .forEach((activity) ->
+                    {
+                        if (viewMode == WEEKLY)
+                        {
+                            if ((activity.getTimeStamp().getDayOfMonth() >= (day - dayOfWeek + 1)) &&
+                                    (activity.getTimeStamp().getDayOfMonth() <= day) &&
+                                    (activity.getTimeStamp().getMonthValue() == month + 1) &&
+                                    (activity.getTimeStamp().getYear() == year))
+                            {
+                                ActivityPanel panel = new ActivityPanel(activity);
+                                defaultMiddlePanel.add(panel);
+                                ActivityModel.getInstance().getVisibleActivities().add(activity);
+                            }
+                        }
+                        else if (viewMode == MONTHLY)
+                        {
+                            if ((activity.getTimeStamp().getDayOfMonth() <= day) && 
+                                    (activity.getTimeStamp().getMonthValue() == month + 1) &&
+                                    (activity.getTimeStamp().getYear() == year))
+                            {
+                                ActivityPanel panel = new ActivityPanel(activity);
+                                defaultMiddlePanel.add(panel);
+                                ActivityModel.getInstance().getVisibleActivities().add(activity);
+                            }
+                        }
+                        else if (viewMode == YEARLY)
+                        {
+                            // This is the case if the mode is annually and the day is in the current month.
+                            if ((activity.getTimeStamp().getYear() == year) &&
+                                    (activity.getTimeStamp().getDayOfMonth() <= day) &&
+                                    (activity.getTimeStamp().getMonthValue() == month + 1))
+                            {
+                                ActivityPanel panel = new ActivityPanel(activity);
+                                defaultMiddlePanel.add(panel);
+                                ActivityModel.getInstance().getVisibleActivities().add(activity);
+                            }
+                            
+                            // It should also display if it's in an earlier month of the year.
+                            else if ((activity.getTimeStamp().getYear() == year) &&
+                                    (activity.getTimeStamp().getMonthValue() <= month))
+                            {
+                                ActivityPanel panel = new ActivityPanel(activity);
+                                defaultMiddlePanel.add(panel);
+                                ActivityModel.getInstance().getVisibleActivities().add(activity);
+                            }
+                        }
+                    });
+            
+            if (ActivityModel.getInstance().getActivities().isEmpty())
+            {
+                JOptionPane.showMessageDialog(null, "No activities have been added to this account yet!");
+            }
+            
+            else if (ActivityModel.getInstance().getVisibleActivities().isEmpty())
+            {
+                String time = "";
+                if (viewMode == MONTHLY) time = "month.";
+                else if (viewMode == YEARLY) time = "year.";
+                else time = "week.";
+                
+                JOptionPane.showMessageDialog(null, "None of the activities have been added within the past " + time
+                        + " Change the view mode setting to try to expand this time field.");
+            }
+            
+            if (firstTime) return;
+            
+            // Toggling the panels forces them to repaint and for the scrollbar to adjust accordingly.
+            switchMiddlePanel(RECEIVE_ACTIVITY_PANEL);
+            switchMiddlePanel(DEFAULT_PANEL);
+        }
+        catch (ParseException ex)
+        {
+            Logger.getLogger(HealthTrackerView.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public AddActivityPanel getAddActivityPanel()
@@ -236,8 +347,17 @@ public class HealthTrackerView extends javax.swing.JFrame
         importButton.addActionListener(listener);
     }
 
+    public void setViewMode(int viewMode)
+    {
+        this.viewMode = viewMode;
+    }
+
+    public int getViewMode()
+    {
+        return viewMode;
+    }
     
-    // All code below this line is generated code.
+    // Code below this line is generated code.
     
     /**
      * This method is called from within the constructor to initialize the form.

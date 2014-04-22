@@ -9,6 +9,8 @@ import java.awt.SystemColor;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -29,7 +31,7 @@ public class CalendarPanel
 {
     private static JPanel currentPanel = null;
     private static int month = -1, day = -1, year = -1;
-    private static JDialog frame = null;
+    private static JDialog dialog = null;
     private static HealthTrackerView parent;
     
     public static void showPanel(HealthTrackerView parent)
@@ -44,40 +46,71 @@ public class CalendarPanel
             year = Calendar.getInstance().get(Calendar.YEAR);
             parent.updateDateLabel(LocalDate.of(year, month + 1, day).format(DateTimeFormatter.ofPattern("MM/dd/yyyy")));
         }
-        if (frame != null)
+        if (dialog != null)
         {
-            frame.setVisible(true);
+            dialog.setVisible(true);
             return;
         }
         
         MonthPanel panel = new MonthPanel(month, year);
 
-        frame = new JDialog();
-        frame.setTitle("Calendar");
-        frame.add(panel);
-        frame.pack();
-        frame.setResizable(false);
+        dialog = new JDialog();
+        dialog.setTitle("Calendar");
+        dialog.add(panel);
+        dialog.pack();
+        dialog.setResizable(false);
+        
+        // When closing the dialog, update the visible activities to reflect the date change.
+        dialog.addWindowListener(new WindowAdapter() 
+        {
+            @Override
+            public void windowClosing(WindowEvent event) 
+            {
+                parent.updateVisibleActivities(false);
+            }
+        });
         
         Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
-        frame.setLocation(d.width/2 - frame.getWidth()/2, d.height/2 - frame.getHeight()/2);
+        dialog.setLocation(d.width/2 - dialog.getWidth()/2, d.height/2 - dialog.getHeight()/2);
         
-        frame.setModal(true);
-        frame.setVisible(true);
-        frame.setFocusable(true);
+        dialog.setModal(true);
+        dialog.setVisible(true);
+        dialog.setFocusable(true);
     }
 
     public static int getMonth()
     {
+        // Make the default values today.
+        if (month == -1 || year == -1 || day == -1)
+        {
+            month = Calendar.getInstance().get(Calendar.MONTH);
+            day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+            year = Calendar.getInstance().get(Calendar.YEAR);
+        }
         return month;
     }
 
     public static int getDay()
     {
+        // Make the default values today.
+        if (month == -1 || year == -1 || day == -1)
+        {
+            month = Calendar.getInstance().get(Calendar.MONTH);
+            day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+            year = Calendar.getInstance().get(Calendar.YEAR);
+        }
         return day;
     }
 
     public static int getYear()
     {
+        // Make the default values today.
+        if (month == -1 || year == -1 || day == -1)
+        {
+            month = Calendar.getInstance().get(Calendar.MONTH);
+            day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+            year = Calendar.getInstance().get(Calendar.YEAR);
+        }
         return year;
     }
     
@@ -145,7 +178,7 @@ public class CalendarPanel
                     parent.updateDateLabel(LocalDate.of(year, month + 1, day).format(DateTimeFormatter.ofPattern("MM/dd/yyyy")));
                     
                     // Validate and repaint to make the changes visible to the user.
-                    frame.pack();
+                    dialog.pack();
                     validate();
                     repaint();
                 });
@@ -167,7 +200,7 @@ public class CalendarPanel
                     parent.updateDateLabel(LocalDate.of(year, month + 1, day).format(DateTimeFormatter.ofPattern("MM/dd/yyyy")));
                     
                     // Validate and repaint to make the changes visible to the user.
-                    frame.pack();
+                    dialog.pack();
                     validate();
                     repaint();
                 });

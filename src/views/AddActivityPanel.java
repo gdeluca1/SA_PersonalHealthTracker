@@ -80,7 +80,6 @@ public class AddActivityPanel extends javax.swing.JPanel
         int activity = activityComboBox.getSelectedIndex();
         LocalDateTime timeStamp = LocalDateTime.now();
         
-        String timeSpent = "";
         // If any text fields are empty, set them to 0.
         resetIfEmpty(hoursTextField);
         resetIfEmpty(minutesTextField);
@@ -93,18 +92,6 @@ public class AddActivityPanel extends javax.swing.JPanel
         int hours = Integer.parseInt(hoursTextField.getText());
         int minutes = Integer.parseInt(minutesTextField.getText());
         int seconds = Integer.parseInt(secondsTextField.getText());
-        if (hours != 0)
-        {
-            timeSpent += hours + "h ";
-        }
-        if (minutes != 0)
-        {
-            timeSpent += minutes + "m ";
-        }
-        if (timeSpent.equals("") || seconds != 0)
-        {
-            timeSpent += seconds + "s";
-        }
         
         String pulse = pulseTextField.getText();
         String bloodPressure;
@@ -118,7 +105,7 @@ public class AddActivityPanel extends javax.swing.JPanel
         }
         String bloodSugar = bloodSugarTextField.getText();
         
-        return new Activity(activity, timeStamp, timeSpent, pulse, bloodPressure, bloodSugar);
+        return new Activity(activity, timeStamp, hours, minutes, seconds, pulse, bloodPressure, bloodSugar);
     }
     
     /**
@@ -338,9 +325,9 @@ public class AddActivityPanel extends javax.swing.JPanel
                 .addComponent(jLabel12)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel13)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(submitButton)
-                .addGap(30, 30, 30))
+                .addContainerGap(50, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 

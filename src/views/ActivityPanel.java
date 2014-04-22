@@ -44,6 +44,7 @@ public class ActivityPanel extends javax.swing.JPanel
         pulseLabel.setText(activityModel.getPulse() + " bpm");
         bloodPressureLabel.setText(activityModel.getBloodPressure());
         bloodSugarLabel.setText(activityModel.getBloodSugar() + " mg/dl");
+        dateLabel.setText(activityModel.getTimeStamp().format(DateTimeFormatter.ofPattern("MM/dd/yyyy")));
     }
 
     /**
@@ -66,6 +67,8 @@ public class ActivityPanel extends javax.swing.JPanel
         pulseLabel = new javax.swing.JLabel();
         bloodPressureLabel = new javax.swing.JLabel();
         bloodSugarLabel = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        dateLabel = new javax.swing.JLabel();
 
         jLabel1.setText("Activity:");
 
@@ -86,6 +89,10 @@ public class ActivityPanel extends javax.swing.JPanel
         bloodPressureLabel.setText("jLabel9");
 
         bloodSugarLabel.setText("jLabel10");
+
+        jLabel6.setText("Date:");
+
+        dateLabel.setText("jLabel7");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -113,7 +120,11 @@ public class ActivityPanel extends javax.swing.JPanel
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(bloodSugarLabel)))
+                        .addComponent(bloodSugarLabel))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(dateLabel)))
                 .addContainerGap(108, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -139,7 +150,11 @@ public class ActivityPanel extends javax.swing.JPanel
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(bloodSugarLabel))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(dateLabel))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -148,12 +163,14 @@ public class ActivityPanel extends javax.swing.JPanel
     private javax.swing.JLabel activityLabel;
     private javax.swing.JLabel bloodPressureLabel;
     private javax.swing.JLabel bloodSugarLabel;
+    private javax.swing.JLabel dateLabel;
     private javax.swing.JLabel durationLabel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel pulseLabel;
     // End of variables declaration//GEN-END:variables
 }

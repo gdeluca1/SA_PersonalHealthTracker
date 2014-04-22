@@ -18,13 +18,17 @@ public class Activity implements Serializable
     
     private int activity;
     private LocalDateTime timeStamp;
-    private String timeSpent, pulse, bloodPressure, bloodSugar;
+    private String pulse, bloodPressure, bloodSugar;
+    private int hoursSpent, minutesSpent, secondsSpent;
     
-    public Activity(int activity, LocalDateTime timeStamp, String timeSpent, String pulse, String bloodPressure, String bloodSugar)
+    public Activity(int activity, LocalDateTime timeStamp, int hoursSpent, int minutesSpent, int secondsSpent, String pulse, String bloodPressure, String bloodSugar)
     {
         this.activity = activity;
         this.timeStamp = timeStamp;
-        this.timeSpent = timeSpent;
+        this.hoursSpent = hoursSpent;
+        this.minutesSpent = minutesSpent;
+        this.secondsSpent = secondsSpent;
+                
         this.pulse = pulse;
         this.bloodPressure = bloodPressure;
         this.bloodSugar = bloodSugar;
@@ -37,7 +41,36 @@ public class Activity implements Serializable
 
     public String getTimeSpent()
     {
+        String timeSpent = "";
+        if (hoursSpent != 0)
+        {
+            timeSpent += hoursSpent + "h ";
+        }
+        if (minutesSpent != 0)
+        {
+            timeSpent += minutesSpent + "m ";
+        }
+        if (timeSpent.equals("") || secondsSpent != 0)
+        {
+            timeSpent += secondsSpent + "s";
+        }
+        
         return timeSpent;
+    }
+
+    public int getHoursSpent()
+    {
+        return hoursSpent;
+    }
+
+    public int getMinutesSpent()
+    {
+        return minutesSpent;
+    }
+
+    public int getSecondsSpent()
+    {
+        return secondsSpent;
     }
 
     public String getPulse()

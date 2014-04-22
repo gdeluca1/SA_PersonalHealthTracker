@@ -5,12 +5,14 @@ import java.util.ArrayList;
 public class ActivityModel
 {
     private ArrayList<Activity> activities;
+    private ArrayList<Activity> visibleActivities;
     
     private static ActivityModel instance = null;
     
     private ActivityModel()
     {
         activities = new ArrayList<>();
+        visibleActivities = new ArrayList<>();
     }
     
     public static ActivityModel getInstance()
@@ -31,5 +33,10 @@ public class ActivityModel
     public ArrayList<Activity> getActivities()
     {
         return activities;
+    }
+
+    public ArrayList<Activity> getVisibleActivities()
+    {
+        return visibleActivities;
     }
 }
