@@ -8,8 +8,9 @@ package views;
 
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
 import javax.swing.JTextField;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -78,7 +79,7 @@ public class AddActivityPanel extends javax.swing.JPanel
     public Activity getActivity()
     {
         int activity = activityComboBox.getSelectedIndex();
-        LocalDateTime timeStamp = LocalDateTime.now();
+        Date timeStamp = Calendar.getInstance().getTime();
         
         // If any text fields are empty, set them to 0.
         resetIfEmpty(hoursTextField);

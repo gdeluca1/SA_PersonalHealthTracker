@@ -1,7 +1,7 @@
 package models;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 public class Activity implements Serializable
 {
@@ -17,11 +17,11 @@ public class Activity implements Serializable
     }
     
     private int activity;
-    private LocalDateTime timeStamp;
+    private Date timeStamp;
     private String pulse, bloodPressure, bloodSugar;
     private int hoursSpent, minutesSpent, secondsSpent;
     
-    public Activity(int activity, LocalDateTime timeStamp, int hoursSpent, int minutesSpent, int secondsSpent, String pulse, String bloodPressure, String bloodSugar)
+    public Activity(int activity, Date timeStamp, int hoursSpent, int minutesSpent, int secondsSpent, String pulse, String bloodPressure, String bloodSugar)
     {
         this.activity = activity;
         this.timeStamp = timeStamp;
@@ -88,7 +88,7 @@ public class Activity implements Serializable
         return bloodSugar;
     }
 
-    public LocalDateTime getTimeStamp()
+    public Date getTimeStamp()
     {
         return timeStamp;
     }
