@@ -2,6 +2,8 @@ package controllers;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.ServerSocket;
@@ -45,8 +47,6 @@ public class HealthTrackerController
         
         view.addAddActivityButtonListener((e)->
         {
-//            JOptionPane.showMessageDialog(null,
-//                    "This button will allow you to record activities, blood pressure, etc.");
             // If the add panel is already being displayed, hide it.
             // Otherwise, display the add activity panel.
             view.switchMiddlePanel(
@@ -81,6 +81,21 @@ public class HealthTrackerController
                     monthlyButton = new JRadioButton("Monthly Viewing"),
                     yearlyButton = new JRadioButton("Yearly Viewing");
             
+            weeklyButton.addActionListener((ae) ->
+            {
+               view.setViewMode(HealthTrackerView.WEEKLY);
+            });
+            
+            monthlyButton.addActionListener((ae) ->
+            {
+               view.setViewMode(HealthTrackerView.MONTHLY);
+            });
+            
+            yearlyButton.addActionListener((ae) ->
+            {
+               view.setViewMode(HealthTrackerView.YEARLY);
+            });
+            
             ButtonGroup buttonGroup = new ButtonGroup();
             buttonGroup.add(weeklyButton);
             buttonGroup.add(monthlyButton);
@@ -109,6 +124,15 @@ public class HealthTrackerController
             dialog.add(buttonPanel);
             dialog.pack();
             dialog.setModal(true);
+            
+            dialog.addWindowListener(new WindowAdapter() 
+            {
+                @Override
+                public void windowClosing(WindowEvent event) 
+                {
+                    view.updateVisibleActivities(false);
+                }
+            });
             
             // Put the dialog in the middle of the screen.
             Dimension d = Toolkit.getDefaultToolkit().getScreenSize();

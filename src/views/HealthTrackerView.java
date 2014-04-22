@@ -175,18 +175,25 @@ public class HealthTrackerView extends javax.swing.JFrame
             // Day = 1 for Sunday, 7 for Saturday.
             int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
             
+            // This stream handles determining if an activity should be displayed depending
+            // on the selected view mode and that activity's date.
             ActivityModel.
                     getInstance().
                     getActivities()
                     .stream()
                     .forEach((activity) ->
                     {
+                        Calendar cal = (Calendar) Calendar.getInstance().clone();
+                        cal.setTime(activity.getTimeStamp());
+                        int theYear = cal.get(Calendar.YEAR);
+                        int theMonth = cal.get(Calendar.MONTH);
+                        int theDay = cal.get(Calendar.DAY_OF_MONTH);
                         if (viewMode == WEEKLY)
                         {
-                            if ((activity.getTimeStamp().getDayOfMonth() >= (day - dayOfWeek + 1)) &&
-                                    (activity.getTimeStamp().getDayOfMonth() <= day) &&
-                                    (activity.getTimeStamp().getMonthValue() == month + 1) &&
-                                    (activity.getTimeStamp().getYear() == year))
+                            if ((theDay >= (day - dayOfWeek + 1)) &&
+                                    (theDay <= day) &&
+                                    (theMonth + 1 == month + 1) &&
+                                    (theYear == year))
                             {
                                 ActivityPanel panel = new ActivityPanel(activity);
                                 defaultMiddlePanel.add(panel);
@@ -195,9 +202,9 @@ public class HealthTrackerView extends javax.swing.JFrame
                         }
                         else if (viewMode == MONTHLY)
                         {
-                            if ((activity.getTimeStamp().getDayOfMonth() <= day) && 
-                                    (activity.getTimeStamp().getMonthValue() == month + 1) &&
-                                    (activity.getTimeStamp().getYear() == year))
+                            if ((theDay <= day) && 
+                                    (theMonth + 1 == month + 1) &&
+                                    (theYear == year))
                             {
                                 ActivityPanel panel = new ActivityPanel(activity);
                                 defaultMiddlePanel.add(panel);
@@ -207,9 +214,9 @@ public class HealthTrackerView extends javax.swing.JFrame
                         else if (viewMode == YEARLY)
                         {
                             // This is the case if the mode is annually and the day is in the current month.
-                            if ((activity.getTimeStamp().getYear() == year) &&
-                                    (activity.getTimeStamp().getDayOfMonth() <= day) &&
-                                    (activity.getTimeStamp().getMonthValue() == month + 1))
+                            if ((theYear == year) &&
+                                    (theDay <= day) &&
+                                    (theMonth + 1 == month + 1))
                             {
                                 ActivityPanel panel = new ActivityPanel(activity);
                                 defaultMiddlePanel.add(panel);
@@ -217,8 +224,8 @@ public class HealthTrackerView extends javax.swing.JFrame
                             }
                             
                             // It should also display if it's in an earlier month of the year.
-                            else if ((activity.getTimeStamp().getYear() == year) &&
-                                    (activity.getTimeStamp().getMonthValue() <= month))
+                            else if ((theYear == year) &&
+                                    (theMonth + 1 <= month))
                             {
                                 ActivityPanel panel = new ActivityPanel(activity);
                                 defaultMiddlePanel.add(panel);
