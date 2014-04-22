@@ -3,6 +3,7 @@ package views;
 import controllers.HealthTrackerController;
 import java.awt.CardLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -21,9 +22,11 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.ScrollPaneConstants;
 import models.ActivityModel;
 import models.Activity;
 import models.ProfileModel;
+import personalhealthtracker.GraphFactory;
 import personalhealthtracker.PersonalHealthTracker;
 
 public class HealthTrackerView extends javax.swing.JFrame
@@ -364,6 +367,20 @@ public class HealthTrackerView extends javax.swing.JFrame
         return viewMode;
     }
     
+    public void addGraphPanel(JPanel graph)
+    {
+        graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.Y_AXIS));
+        System.out.println("adding graph.");
+        JPanel newGraph = GraphFactory.getBarChart(1);
+        newGraph.setPreferredSize(new Dimension(300, 200));
+        graphPanel.add(newGraph);
+        newGraph = GraphFactory.getLineChart(1);
+        newGraph.setPreferredSize(new Dimension(300, 200));
+        graphPanel.add(newGraph);
+        graphPanel.revalidate();
+        graphPanel.repaint();
+    }
+    
     // Code below this line is generated code.
     
     /**
@@ -384,6 +401,8 @@ public class HealthTrackerView extends javax.swing.JFrame
         dateLabel = new javax.swing.JLabel();
         calendarButton = new javax.swing.JButton();
         scrollPanel = new javax.swing.JScrollPane(middlePanel);
+        jScrollPane1 = new javax.swing.JScrollPane();
+        graphPanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Personal Health Tracker");
@@ -410,6 +429,20 @@ public class HealthTrackerView extends javax.swing.JFrame
         }
         catch (IOException ex) {ex.printStackTrace();}
 
+        javax.swing.GroupLayout graphPanelLayout = new javax.swing.GroupLayout(graphPanel);
+        graphPanel.setLayout(graphPanelLayout);
+        graphPanelLayout.setHorizontalGroup(
+            graphPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 308, Short.MAX_VALUE)
+        );
+        graphPanelLayout.setVerticalGroup(
+            graphPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
+        jScrollPane1.setViewportView(graphPanel);
+        jScrollPane1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -431,7 +464,9 @@ public class HealthTrackerView extends javax.swing.JFrame
                         .addComponent(calendarButton, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addComponent(scrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(315, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 296, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -452,6 +487,7 @@ public class HealthTrackerView extends javax.swing.JFrame
                 .addComponent(importButton)
                 .addContainerGap(118, Short.MAX_VALUE))
             .addComponent(scrollPanel)
+            .addComponent(jScrollPane1)
         );
 
         addActivityButton.getAccessibleContext().setAccessibleName("addActivityButton");
@@ -463,7 +499,9 @@ public class HealthTrackerView extends javax.swing.JFrame
     private javax.swing.JButton addActivityButton;
     private javax.swing.JButton calendarButton;
     private javax.swing.JLabel dateLabel;
+    private javax.swing.JPanel graphPanel;
     private javax.swing.JButton importButton;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton printButton;
     private javax.swing.JScrollPane scrollPanel;
     private javax.swing.JButton trendingButton;

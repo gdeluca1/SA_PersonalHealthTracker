@@ -19,6 +19,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import models.Activity;
+import personalhealthtracker.GraphFactory;
 import views.AddActivityPanel;
 import views.CalendarPanel;
 import views.HealthTrackerView;
@@ -143,8 +144,8 @@ public class HealthTrackerController
         
         view.addTrendingButtonListener((e)->
         {
-            JOptionPane.showMessageDialog(null,
-                    "This button grants access to additional graphing cabailities.");
+            view.addGraphPanel(GraphFactory.getLineChart(1));
+            System.out.println("added graph.");
         });
         
         view.addPrintButtonListener((e)->
