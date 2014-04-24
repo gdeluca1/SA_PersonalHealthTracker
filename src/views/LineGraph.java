@@ -15,34 +15,27 @@ import java.util.ArrayList;
 import java.util.Collections;
 import javax.swing.JPanel;
 import models.Activity;
-import models.ActivityModel;
 import static personalhealthtracker.GraphFactory.getSecondsSpent;
 import personalhealthtracker.Pair;
 
 public class LineGraph extends JPanel
 {
-    private ArrayList<Activity> activities;
+    private ArrayList<Activity> activities,
+            reducedList = null,
+            sortedList = null;
     private final int selectedStat;
-    private final boolean autoUpdate;
     
-    public LineGraph(ArrayList<Activity> activities, int selectedStat, boolean autoUpdate)
+    public LineGraph(ArrayList<Activity> activities, int selectedStat)
     {
         super();
         this.activities = activities;
         this.selectedStat = selectedStat;
-        this.autoUpdate = autoUpdate;
     }
     
     @Override
     protected void paintComponent(Graphics g)
     {
         super.paintComponent(g);
-
-        if (autoUpdate)
-        {
-            // If we want to auto update, clone the list. This prevents concurrent modifications while still getting the data.
-            activities = (ArrayList<Activity>) ActivityModel.getInstance().getVisibleActivities().clone();
-        }
         
         Graphics2D g2 = (Graphics2D) g;
         BasicStroke stroke2 = new BasicStroke(2),
@@ -60,30 +53,45 @@ public class LineGraph extends JPanel
         g2.drawLine(widthOffset, graphHeight + heightOffset, graphWidth, graphHeight + heightOffset);
 
         // This list will store a filtered version of the list, matching the activities which the user wants.
-        ArrayList<Activity> reducedList = new ArrayList<>();
+        if (reducedList == null) reducedList = new ArrayList<>();
 
-        activities
-                .parallelStream()
-                .forEach((activity) ->
-                {
-                    if (activity.getActivity() == selectedStat)
+        if (reducedList.isEmpty())
+            activities
+                    .parallelStream()
+                    .forEach((activity) ->
                     {
-                        reducedList.add(activity);
-                    }
-                });
+                        if (activity.getActivity() == selectedStat)
+                        {
+                            reducedList.add(activity);
+                        }
+                    });
         
-        Collections.sort(activities, (a, b) ->
+        Collections.sort(reducedList, (a, b) ->
         {
             return a.getTimeStamp().compareTo(b.getTimeStamp());
         });
         
-        activities.forEach((activity) ->
+        // If we try to paint anything when there's nothing, we'll get null pointer exceptions.
+        if (reducedList.isEmpty())
         {
-            System.out.println(activity.getTimeStamp().getTime());
-        });
+            return;
+        }
 
         // Create a parallel list to store the values in a sorted order.
-        ArrayList<Activity> sortedList = (ArrayList<Activity>) reducedList.clone();
+        if (sortedList == null) sortedList = (ArrayList<Activity>) reducedList.clone();
+        
+//        System.out.println(sortedList.size());
+//        long count = sortedList
+//                .parallelStream()
+//                .filter((activity) ->
+//                {
+//                    boolean b = (activity == null);
+//                    if (b == true) System.out.println(sortedList.indexOf(activity));
+//                    return b;
+//                })
+//                .count();
+//        System.out.println(count + " null.");
+//        System.out.println();
 
         // Sort by time spent.
         Collections.sort(sortedList, (a, b) ->
@@ -93,12 +101,6 @@ public class LineGraph extends JPanel
 
             return Integer.compare(timeA, timeB);
         });
-
-        // If we try to paint anything when there's nothing, we'll get null pointer exceptions.
-        if (sortedList.isEmpty())
-        {
-            return;
-        }
 
         // The max and min value in the list.
         int max = getSecondsSpent(sortedList.get(sortedList.size() - 1));
