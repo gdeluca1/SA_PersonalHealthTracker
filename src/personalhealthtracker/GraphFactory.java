@@ -15,6 +15,8 @@ import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.Collections;
 import javax.swing.JPanel;
+import models.Activity;
+import models.ActivityModel;
 
 /**
  *
@@ -22,6 +24,16 @@ import javax.swing.JPanel;
  */
 public class GraphFactory
 {
+    /**
+     * Returns the number of seconds for which an activity was performed.
+     * @param activity The activity.
+     * @return Time in seconds.
+     */
+    public int getSecondsSpent(Activity activity)
+    {
+        return activity.getHoursSpent() * 3600 + activity.getMinutesSpent() * 60 + activity.getSecondsSpent();
+    }
+        
     /**
      * Creates a pie chart from the data in the activity list.
      * @return A JPanel with the pie chart drawn on it.
@@ -66,18 +78,34 @@ public class GraphFactory
                 g2.drawLine(widthOffset, graphHeight + heightOffset, graphWidth, graphHeight + heightOffset);
                 
                 // Create a fake list of points for testing. Make sure the list is sorted.
-                int dummyPoints[] = new int[]{24, 21, 3, 6, 2, 10, 25, 63};
+//                int dummyPoints[] = new int[]{24, 21, 3, 6, 2, 10, 25, 63};
 //                int dummyPoints[] = new int[] {22, -1, -16, 0, 10, 20, 30, 42, 23, 14};
-                ArrayList<Integer> dummyList = new ArrayList<>();
-                for (int i : dummyPoints)
+                ArrayList<Activity> dummyList = new ArrayList<>();
+                ActivityModel.getInstance().getVisibleActivities()
+                        .parallelStream()
+                        .forEach((activity) ->
+                        {
+                            if (activity.getActivity() == selectedStat)
+                            {
+                                dummyList.add(activity);
+                            }
+                        });
+                
+//                for (int i : dummyPoints)
+//                {
+//                    dummyList.add(i);
+//                }
+                Collections.sort(dummyList, (a, b) ->
                 {
-                    dummyList.add(i);
-                }
-                Collections.sort(dummyList);
+                    int timeA = a.getHoursSpent() * 3600 + a.getMinutesSpent() * 60 + a.getSecondsSpent();
+                    int timeB = b.getHoursSpent() * 3600 + b.getMinutesSpent() * 60 + b.getSecondsSpent();
+                    
+                    return Integer.compare(timeA, timeB);
+                });
                 
                 // The max and min value in the list.
-                int max = dummyList.get(dummyList.size() - 1);
-                int min = dummyList.get(0);
+//                int max = dummyList.get(dummyList.size() - 1);
+//                int min = dummyList.get(0);
                 
                 int n = dummyList.size();
                 int pointOffsetX = (int) graphWidth/(n + 2);
@@ -100,31 +128,31 @@ public class GraphFactory
                 g2.setColor(Color.BLACK);
                 
                 // Iterate through the list, graphing each point.
-                for (int i = 0; i < n; i++)
-                {
-                    previousPoint = currentPoint;
-                    
-                    xPosition = (i + 1) * pointOffsetX + widthOffset;
-                    
-                    p = dummyPoints[i];
-                    d1 = max - p;
-                    d2 = p - min; 
-                    yPosition = (d1 / (d1 + d2)) * validDistance + graphHeight / 20 + heightOffset;
-                    
-                    // Draw all the points.
-                    g2.setStroke(new BasicStroke(5));
-                    g2.drawLine((int) xPosition, (int) yPosition, (int) xPosition, (int) yPosition);
-                    
-                    currentPoint = new Pair<>(xPosition, yPosition);
-                    
-                    // If this isn't the first point, connect the dots.
-                    if (previousPoint != null)
-                    {
-                        g2.setStroke(new BasicStroke(3));
-                        g2.drawLine(previousPoint.getValue1().intValue(), previousPoint.getValue2().intValue(), 
-                                currentPoint.getValue1().intValue(), currentPoint.getValue2().intValue());
-                    }
-                }
+//                for (int i = 0; i < n; i++)
+//                {
+//                    previousPoint = currentPoint;
+//                    
+//                    xPosition = (i + 1) * pointOffsetX + widthOffset;
+//                    
+//                    p = dummyPoints[i];
+//                    d1 = max - p;
+//                    d2 = p - min; 
+//                    yPosition = (d1 / (d1 + d2)) * validDistance + graphHeight / 20 + heightOffset;
+//                    
+//                    // Draw all the points.
+//                    g2.setStroke(new BasicStroke(5));
+//                    g2.drawLine((int) xPosition, (int) yPosition, (int) xPosition, (int) yPosition);
+//                    
+//                    currentPoint = new Pair<>(xPosition, yPosition);
+//                    
+//                    // If this isn't the first point, connect the dots.
+//                    if (previousPoint != null)
+//                    {
+//                        g2.setStroke(new BasicStroke(3));
+//                        g2.drawLine(previousPoint.getValue1().intValue(), previousPoint.getValue2().intValue(), 
+//                                currentPoint.getValue1().intValue(), currentPoint.getValue2().intValue());
+//                    }
+//                }
             }
         };
     }
