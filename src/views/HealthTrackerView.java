@@ -235,6 +235,9 @@ public class HealthTrackerView extends javax.swing.JFrame
         {
             Logger.getLogger(HealthTrackerView.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        graphPanel.revalidate();
+        graphPanel.repaint();
     }
 
     public AddActivityPanel getAddActivityPanel()

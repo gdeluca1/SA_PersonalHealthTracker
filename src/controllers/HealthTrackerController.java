@@ -216,7 +216,7 @@ public class HealthTrackerController
         
         view.getTrendingPanel().addLineGraphButtonListener((e) ->
         {
-            view.addGraphPanel(GraphFactory.getLineChart(view.getTrendingPanel().getSelectedRadioButton()));
+            view.addGraphPanel(GraphFactory.getLineChart(view.getTrendingPanel().getSelectedRadioButton(), false));
         });
         
         view.addPrintButtonListener((e)->
