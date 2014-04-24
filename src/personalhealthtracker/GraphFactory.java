@@ -29,7 +29,7 @@ public class GraphFactory
      * @param activity The activity.
      * @return Time in seconds.
      */
-    public int getSecondsSpent(Activity activity)
+    public static int getSecondsSpent(Activity activity)
     {
         return activity.getHoursSpent() * 3600 + activity.getMinutesSpent() * 60 + activity.getSecondsSpent();
     }
