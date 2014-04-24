@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.ServerSocket;
@@ -18,7 +19,9 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 import models.Activity;
+import models.ProfileModel;
 import personalhealthtracker.GraphFactory;
 import views.AddActivityPanel;
 import views.CalendarPanel;
@@ -40,6 +43,54 @@ public class HealthTrackerController
     public HealthTrackerController(HealthTrackerView view, AddActivityPanel view2)
     {
         this.view = view;
+        
+        // Add a window listener. When the user attempts to x out, make sure they want to logout.
+        view.addWindowListener(new WindowListener()
+        {
+
+            @Override
+            public void windowOpened(WindowEvent e) {}
+
+            @Override
+            public void windowClosing(WindowEvent e) 
+            {
+                // If any data transfers are still running, don't let the user close out.
+                if (! HealthTrackerController.close())
+                {
+                    view.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+                    return;
+                }
+                int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to logout?", "Logout", JOptionPane.YES_NO_OPTION);
+                if (confirm == JOptionPane.YES_OPTION)
+                {
+                    // Logout and save the user data.
+                    ProfileModel.getInstance().logout();
+                    // Garbage collect.
+                    view.dispose();
+                    System.exit(0);
+                }
+                // If the user doesn't want to log out, don't let the window close.
+                else
+                {
+                    view.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+                }
+            }
+
+            @Override
+            public void windowClosed(WindowEvent e) {}
+
+            @Override
+            public void windowIconified(WindowEvent e) {}
+
+            @Override
+            public void windowDeiconified(WindowEvent e) {}
+
+            @Override
+            public void windowActivated(WindowEvent e) {}
+
+            @Override
+            public void windowDeactivated(WindowEvent e) {}
+        });
         
         view.addCalendarButtonListener((e)->
         {

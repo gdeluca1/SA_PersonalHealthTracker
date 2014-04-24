@@ -2,12 +2,12 @@ package views;
 
 import controllers.HealthTrackerController;
 import java.awt.CardLayout;
+import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,13 +20,13 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.ScrollPaneConstants;
 import models.ActivityModel;
 import models.Activity;
-import models.ProfileModel;
-import personalhealthtracker.GraphFactory;
 import personalhealthtracker.PersonalHealthTracker;
 
 public class HealthTrackerView extends javax.swing.JFrame
@@ -35,13 +35,18 @@ public class HealthTrackerView extends javax.swing.JFrame
     public static final String DEFAULT_PANEL = "Default displayed JPanel";
     public static final String ADD_ACTIVITY_PANEL = "Panel for adding activities.";
     public static final String RECEIVE_ACTIVITY_PANEL = "Panel for receiving activities from the mobile app version.";
+    public static final String TRENDING_PANEL = "Choose a graph to add to the graph panel.";
+    
     private String currentPanel;
     
-    private AddActivityPanel addActivityPanel;
-    private JPanel middlePanel;
-    private JPanel defaultMiddlePanel;
+    private final AddActivityPanel addActivityPanel;
+    private final JPanel middlePanel, defaultMiddlePanel;
+    private final TrendingPanel trendingPanel;
+            
+    private final ActivityReceiverView activityReceiverView;
     
-    private ActivityReceiverView activityReceiverView;
+    // Used to add a right click menu to the graphs.
+    private JPopupMenu popupMenu;
     
     public static final int WEEKLY = -1, MONTHLY = 0, YEARLY = 1;
     
@@ -58,6 +63,19 @@ public class HealthTrackerView extends javax.swing.JFrame
         
         initComponents();
         
+        graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.Y_AXIS));
+        popupMenu = new JPopupMenu();
+        
+        // Menu item for the popup menu on the graphs. Delete the graph by removing it from this frame.
+        JMenuItem deleteItem = new JMenuItem("Delete");
+        deleteItem.addActionListener((e) ->
+        {
+            Component parent = popupMenu.getInvoker();
+            graphPanel.remove(parent);
+            graphPanel.revalidate();
+        });
+        popupMenu.add(deleteItem);
+        
         try
         {
              setIconImage(ImageIO.read(PersonalHealthTracker.class.getResource("librarian.jpg")));
@@ -71,6 +89,7 @@ public class HealthTrackerView extends javax.swing.JFrame
         defaultMiddlePanel = new JPanel();
         addActivityPanel = new AddActivityPanel();
         activityReceiverView = new ActivityReceiverView();
+        trendingPanel = new TrendingPanel();
         
         defaultMiddlePanel.setLayout(new BoxLayout(defaultMiddlePanel, BoxLayout.Y_AXIS));
         
@@ -78,65 +97,17 @@ public class HealthTrackerView extends javax.swing.JFrame
         middlePanel.add(defaultMiddlePanel, DEFAULT_PANEL);
         middlePanel.add(addActivityPanel, ADD_ACTIVITY_PANEL);
         middlePanel.add(activityReceiverView, RECEIVE_ACTIVITY_PANEL);
+        middlePanel.add(trendingPanel, TRENDING_PANEL);
         
         // Center the frame in the middle of the screen.
         setLocation(screenSize.width/2 - getWidth()/2, screenSize.height/2 - getHeight()/2);
         
         ActivityModel.getInstance();
         
-        // Add a window listener. When the user attempts to x out, make sure they want to logout.
-        addWindowListener(new WindowListener()
-        {
-
-            @Override
-            public void windowOpened(WindowEvent e) {}
-
-            @Override
-            public void windowClosing(WindowEvent e) 
-            {
-                // If any data transfers are still running, don't let the user close out.
-                if (! HealthTrackerController.close())
-                {
-                    setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-                    return;
-                }
-                int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to logout?", "Logout", JOptionPane.YES_NO_OPTION);
-                if (confirm == JOptionPane.YES_OPTION)
-                {
-                    // Logout and save the user data.
-                    ProfileModel.getInstance().logout();
-                    // Garbage collect.
-                    dispose();
-                    System.exit(0);
-                }
-                // If the user doesn't want to log out, don't let the window close.
-                else
-                {
-                    setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-                }
-            }
-
-            @Override
-            public void windowClosed(WindowEvent e) {}
-
-            @Override
-            public void windowIconified(WindowEvent e) {}
-
-            @Override
-            public void windowDeiconified(WindowEvent e) {}
-
-            @Override
-            public void windowActivated(WindowEvent e) {}
-
-            @Override
-            public void windowDeactivated(WindowEvent e) {}
-        });
-        
         // If there were activities saved from last time, display them to the user.
         if (! ActivityModel.getInstance().getActivities().isEmpty())
         {
             updateVisibleActivities(true);
-//            ActivityModel.getInstance().getActivities().forEach((activity) -> defaultMiddlePanel.add(new ActivityPanel(activity)));
         }
     }
     
@@ -244,7 +215,7 @@ public class HealthTrackerView extends javax.swing.JFrame
             
             else if (ActivityModel.getInstance().getVisibleActivities().isEmpty())
             {
-                String time = "";
+                String time;
                 if (viewMode == MONTHLY) time = "month.";
                 else if (viewMode == YEARLY) time = "year.";
                 else time = "week.";
@@ -367,18 +338,48 @@ public class HealthTrackerView extends javax.swing.JFrame
         return viewMode;
     }
     
+    private void maybeShowPopup(MouseEvent e)
+    {
+        // If mouse click is a trigger to show a popup menu.
+        if (e.isPopupTrigger())
+        {
+             popupMenu.show(e.getComponent(), e.getX(), e.getY());
+        }
+    }
+    
     public void addGraphPanel(JPanel graph)
     {
-        graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.Y_AXIS));
-        System.out.println("adding graph.");
-        JPanel newGraph = GraphFactory.getBarChart(1);
-        newGraph.setPreferredSize(new Dimension(300, 200));
-        graphPanel.add(newGraph);
-        newGraph = GraphFactory.getLineChart(1);
-        newGraph.setPreferredSize(new Dimension(300, 200));
-        graphPanel.add(newGraph);
+        graph.addMouseListener(new MouseListener()
+        {
+
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {}
+
+            @Override
+            public void mousePressed(MouseEvent e)
+            {
+                maybeShowPopup(e);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e)
+            {
+                maybeShowPopup(e);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {}
+
+            @Override
+            public void mouseExited(MouseEvent e)
+            {}
+        });
+        
+        graph.setPreferredSize(new Dimension(300,200));
+        graphPanel.add(graph);
         graphPanel.revalidate();
-        graphPanel.repaint();
     }
     
     // Code below this line is generated code.
