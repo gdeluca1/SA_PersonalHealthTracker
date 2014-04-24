@@ -40,7 +40,7 @@ public class HealthTrackerController
     // Setting this variable to true will display debugging messages.
     private static final boolean DEBUG = false;
     
-    public HealthTrackerController(HealthTrackerView view, AddActivityPanel view2)
+    public HealthTrackerController(HealthTrackerView view)
     {
         this.view = view;
         
@@ -107,10 +107,10 @@ public class HealthTrackerController
                             HealthTrackerView.ADD_ACTIVITY_PANEL);
         });
         
-        view2.addSubmitButtonListener((e) ->
+        view.getAddActivityPanel().addSubmitButtonListener((e) ->
         {
             // Can't add a blank activity.
-            if (view2.allFieldsEmpty())
+            if (view.getAddActivityPanel().allFieldsEmpty())
             {
                 JOptionPane.showMessageDialog(null, "You must enter information in at least one field", "Error", 0);
             }
@@ -118,10 +118,10 @@ public class HealthTrackerController
             // Make sure the user actually wants to add this activity.
             else if (JOptionPane.showConfirmDialog(null, "Are you sure you would like to add this activity?") == JOptionPane.YES_OPTION) 
             {
-                view.addActivityToPanel(view2.getActivity());
+                view.addActivityToPanel(view.getAddActivityPanel().getActivity());
                 // Switch back to the default panel and reset the add activity panel.
                 view.switchMiddlePanel(HealthTrackerView.DEFAULT_PANEL);
-                view2.resetPanel();
+                view.getAddActivityPanel().resetPanel();
             }
             
             view.updateVisibleActivities(false);
@@ -195,8 +195,28 @@ public class HealthTrackerController
         
         view.addTrendingButtonListener((e)->
         {
-            view.addGraphPanel(GraphFactory.getLineChart(1));
-            System.out.println("added graph.");
+//            view.addGraphPanel(GraphFactory.getLineChart(1));
+            // If the trending panel is already being displayed, hide it.
+            // Otherwise, display the trending panel.
+            view.switchMiddlePanel(
+                    view.displayingPanel(HealthTrackerView.TRENDING_PANEL) ? 
+                            HealthTrackerView.DEFAULT_PANEL :
+                            HealthTrackerView.TRENDING_PANEL);
+        });
+        
+        view.getTrendingPanel().addBarGraphButtonListener((e) ->
+        {
+            view.addGraphPanel(GraphFactory.getBarChart());
+        });
+        
+        view.getTrendingPanel().addPieChartButtonListener((e) ->
+        {
+            view.addGraphPanel(GraphFactory.getPieChart());
+        });
+        
+        view.getTrendingPanel().addLineGraphButtonListener((e) ->
+        {
+            view.addGraphPanel(GraphFactory.getLineChart(view.getTrendingPanel().getSelectedRadioButton()));
         });
         
         view.addPrintButtonListener((e)->

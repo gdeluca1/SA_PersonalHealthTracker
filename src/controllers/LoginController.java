@@ -4,10 +4,7 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.LinkedList;
 import java.util.Optional;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
 import models.LogManager;
 import models.ProfileModel;
 import views.ChangePasswordPanel;
@@ -29,7 +26,7 @@ public class LoginController
                 LogManager.getInstance().loadActivities();
                 HealthTrackerView healthTrackerView = new HealthTrackerView();
                 healthTrackerView.setVisible(true);
-                HealthTrackerController controller = new HealthTrackerController(healthTrackerView, healthTrackerView.getAddActivityPanel());
+                HealthTrackerController controller = new HealthTrackerController(healthTrackerView);
             }
             
             else

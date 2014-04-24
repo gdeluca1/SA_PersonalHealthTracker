@@ -21,7 +21,7 @@ public class PersonalHealthTracker
                 LogManager.getInstance().loadActivities();
                 HealthTrackerView healthTrackerView = new HealthTrackerView();
                 healthTrackerView.setVisible(true);
-                HealthTrackerController controller = new HealthTrackerController(healthTrackerView, healthTrackerView.getAddActivityPanel());
+                HealthTrackerController controller = new HealthTrackerController(healthTrackerView);
             }
             return;
         }

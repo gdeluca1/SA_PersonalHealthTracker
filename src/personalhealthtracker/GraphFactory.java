@@ -40,7 +40,7 @@ public class GraphFactory
         };
     }
     
-    public static JPanel getLineChart(int timeSpan)
+    public static JPanel getLineChart(int selectedStat)
     {         
         return new JPanel()
         {
@@ -129,7 +129,7 @@ public class GraphFactory
         };
     }
     
-    public static JPanel getBarChart(int timeSpan)
+    public static JPanel getBarChart()
     {
         return new JPanel()
         {

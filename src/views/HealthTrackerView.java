@@ -73,6 +73,7 @@ public class HealthTrackerView extends javax.swing.JFrame
             Component parent = popupMenu.getInvoker();
             graphPanel.remove(parent);
             graphPanel.revalidate();
+            graphPanel.repaint();
         });
         popupMenu.add(deleteItem);
         
@@ -240,6 +241,11 @@ public class HealthTrackerView extends javax.swing.JFrame
     {
         return addActivityPanel;
     }
+
+    public TrendingPanel getTrendingPanel()
+    {
+        return trendingPanel;
+    }
     
     /**
      * Start running the progress bar while receiving activities from the phone.
@@ -380,6 +386,7 @@ public class HealthTrackerView extends javax.swing.JFrame
         graph.setPreferredSize(new Dimension(300,200));
         graphPanel.add(graph);
         graphPanel.revalidate();
+        graphPanel.repaint();
     }
     
     // Code below this line is generated code.

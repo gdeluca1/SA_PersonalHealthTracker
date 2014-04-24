@@ -16,13 +16,70 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <EmptySpace min="0" pref="400" max="32767" attributes="0"/>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="63" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="sedentaryRadioButton" min="-2" max="-2" attributes="0"/>
+                  <Component id="cardioRadioButton" min="-2" max="-2" attributes="0"/>
+                  <Component id="lineGraphButton" min="-2" max="-2" attributes="0"/>
+                  <Component id="pieChartButton" min="-2" max="-2" attributes="0"/>
+                  <Component id="barGraphButton" min="-2" max="-2" attributes="0"/>
+                  <Component id="strengthRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace pref="99" max="32767" attributes="0"/>
+          </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <EmptySpace min="0" pref="300" max="32767" attributes="0"/>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="44" max="-2" attributes="0"/>
+              <Component id="barGraphButton" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="pieChartButton" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="lineGraphButton" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="cardioRadioButton" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="sedentaryRadioButton" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="strengthRadioButton" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="78" max="32767" attributes="0"/>
+          </Group>
       </Group>
     </DimensionLayout>
   </Layout>
+  <SubComponents>
+    <Component class="javax.swing.JButton" name="barGraphButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Add Bar Graph"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="pieChartButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Add Pie Chart"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="lineGraphButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Add Line Graph"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JRadioButton" name="strengthRadioButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Strength Line Graph"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JRadioButton" name="cardioRadioButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Cardio Line Graph"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JRadioButton" name="sedentaryRadioButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Sedentary Line Graph"/>
+      </Properties>
+    </Component>
+  </SubComponents>
 </Form>
