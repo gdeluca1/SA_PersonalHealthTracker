@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JPanel;
+import views.HealthTrackerView;
 
 public class LogManager
 {
@@ -169,6 +171,90 @@ public class LogManager
                 if (DEBUG)
                 {
                     System.out.println("Wrote: " + ActivityModel.getInstance().getActivities().size() + " activities.");
+                }
+            }
+            catch (FileNotFoundException ex)
+            {
+                Logger.getLogger(LogManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            catch (IOException ex)
+            {
+                Logger.getLogger(LogManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            finally 
+            {
+                try 
+                {
+                    if (fOut != null)
+                    {
+                        fOut.close();
+                    }
+                }
+                catch (IOException ex) 
+                {
+                    Logger.getLogger(LogManager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }
+    
+    public void loadGraphs(HealthTrackerView view)
+    {
+        File loadFile = new File(new File(System.getProperty("user.home")), "/PersonalHealthTracker/" + ProfileModel.getInstance().getCurrentUser() + "Graphs.dat");
+        if (loadFile.exists())
+        {
+            FileInputStream fIn = null;
+            try {
+                fIn = new FileInputStream(loadFile);
+                ObjectInputStream in = new ObjectInputStream(fIn);
+                int count = GraphModel.getInstance().restoreGraphs((ArrayList<Graph>) in.readObject(), view);
+                
+                if (DEBUG)
+                {
+                    System.out.println("Read: " + count + " graphs.");
+                }
+            }
+            catch (FileNotFoundException ex) {
+                Logger.getLogger(LogManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            catch (IOException | ClassNotFoundException ex)
+            {
+                Logger.getLogger(LogManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            finally 
+            {
+                try 
+                {
+                    if (fIn != null)
+                    {
+                        fIn.close();
+                    }
+                }
+                catch (IOException ex) 
+                {
+                    Logger.getLogger(LogManager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }
+    
+    public void saveGraphs(JPanel graphPanel)
+    {
+        // Save the state to a file named after their username on their home directory.
+        File saveFile = new File(new File(System.getProperty("user.home")), "/PersonalHealthTracker/" + ProfileModel.getInstance().getCurrentUser() + "Graphs.dat");
+        saveFile.getParentFile().mkdir();
+        ArrayList<Graph> graphs = GraphModel.getInstance().getGraphs(graphPanel);
+        if (! graphs.isEmpty())
+        {
+            FileOutputStream fOut = null;
+            try
+            {
+                fOut = new FileOutputStream(saveFile);
+                ObjectOutputStream out = new ObjectOutputStream(fOut);
+                out.writeObject(graphs);
+                if (DEBUG)
+                {
+                    System.out.println("Wrote: " + graphs.size() + " graphs.");
                 }
             }
             catch (FileNotFoundException ex)

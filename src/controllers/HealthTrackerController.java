@@ -71,7 +71,7 @@ public class HealthTrackerController
                 if (confirm == JOptionPane.YES_OPTION)
                 {
                     // Logout and save the user data.
-                    ProfileModel.getInstance().logout();
+                    ProfileModel.getInstance().logout(view.getGraphPanel());
                     // Garbage collect.
                     view.dispose();
                     System.exit(0);

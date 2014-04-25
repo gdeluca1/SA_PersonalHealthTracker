@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import javax.swing.JPanel;
 
 public class ProfileModel
 {
@@ -180,9 +181,10 @@ public class ProfileModel
         return profileFound;
     }
     
-    public void logout()
+    public void logout(JPanel graphPanel)
     {
         LogManager.getInstance().saveActivities();
+        LogManager.getInstance().saveGraphs(graphPanel);
         LogManager.getInstance().saveUserList();
         currentUsername = null;
     }

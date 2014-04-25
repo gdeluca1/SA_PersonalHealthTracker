@@ -25,6 +25,7 @@ public class LoginController
                 // Make sure to load the activites from the last session.
                 LogManager.getInstance().loadActivities();
                 HealthTrackerView healthTrackerView = new HealthTrackerView();
+                LogManager.getInstance().loadGraphs(healthTrackerView);
                 healthTrackerView.setVisible(true);
                 HealthTrackerController controller = new HealthTrackerController(healthTrackerView);
             }

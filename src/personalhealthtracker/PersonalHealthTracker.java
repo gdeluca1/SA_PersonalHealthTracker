@@ -20,6 +20,7 @@ public class PersonalHealthTracker
             {
                 LogManager.getInstance().loadActivities();
                 HealthTrackerView healthTrackerView = new HealthTrackerView();
+                LogManager.getInstance().loadGraphs(healthTrackerView);
                 healthTrackerView.setVisible(true);
                 HealthTrackerController controller = new HealthTrackerController(healthTrackerView);
             }

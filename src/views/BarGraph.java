@@ -81,6 +81,16 @@ public class BarGraph extends JPanel{
         sedentaryActivities = 0;
         update = true;
     }
+
+    public ArrayList<Activity> getActivities()
+    {
+        return activities;
+    }
+
+    public boolean isAutoUpdate()
+    {
+        return autoUpdate;
+    }
     
     @Override
     protected void paintComponent(Graphics g){

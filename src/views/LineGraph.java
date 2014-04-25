@@ -42,6 +42,26 @@ public class LineGraph extends JPanel
         this.autoUpdate = autoUpdate;
         this.title = graphTitle;
     }
+
+    public ArrayList<Activity> getActivities()
+    {
+        return activities;
+    }
+
+    public int getSelectedStat()
+    {
+        return selectedStat;
+    }
+
+    public boolean isAutoUpdate()
+    {
+        return autoUpdate;
+    }
+
+    public String getTitle()
+    {
+        return title;
+    }
     
     @Override
     protected void paintComponent(Graphics g)
@@ -89,7 +109,7 @@ public class LineGraph extends JPanel
         // Use FontMetrics to draw the string in the middle of the panel.
         FontMetrics fm = g2.getFontMetrics();
         Rectangle2D rect = fm.getStringBounds(title, g2);
-        g2.drawString(title, (int) (graphWidth/2 - rect.getWidth()/2), (int) (heightOffset/2));
+        g2.drawString(title, (int) (graphWidth/2 - rect.getWidth()/2), (int) (heightOffset/2 + rect.getHeight()/2));
 
         // This map stores the amount of time the user worked out each day.
         if (timePerDay == null)        
