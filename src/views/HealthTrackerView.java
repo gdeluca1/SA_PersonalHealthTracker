@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
+import java.io.InvalidClassException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -46,7 +47,9 @@ public class HealthTrackerView extends javax.swing.JFrame
     private final ActivityReceiverView activityReceiverView;
     
     // Used to add a right click menu to the graphs.
-    private JPopupMenu popupMenu;
+    private JPopupMenu popupMenu,
+            // Used for the activities.
+            popupMenu2;
     
     public static final int WEEKLY = -1, MONTHLY = 0, YEARLY = 1;
     
@@ -65,6 +68,7 @@ public class HealthTrackerView extends javax.swing.JFrame
         
         graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.Y_AXIS));
         popupMenu = new JPopupMenu();
+        popupMenu2 = new JPopupMenu();
         
         // Menu item for the popup menu on the graphs. Delete the graph by removing it from this frame.
         JMenuItem deleteItem = new JMenuItem("Delete");
@@ -100,6 +104,23 @@ public class HealthTrackerView extends javax.swing.JFrame
         middlePanel.add(activityReceiverView, RECEIVE_ACTIVITY_PANEL);
         middlePanel.add(trendingPanel, TRENDING_PANEL);
         
+        JMenuItem deleteItem2 = new JMenuItem("Delete");
+        deleteItem2.addActionListener((e) ->
+        {
+            Component parent = popupMenu2.getInvoker();
+            if (! (parent instanceof ActivityPanel))
+            {
+                System.err.println("Activity Panel's popup menu's parent is not Activity Panel! Emergency exit.");
+                System.exit(1);
+            }
+            ActivityPanel panel = (ActivityPanel)parent;
+            defaultMiddlePanel.remove(panel);
+            ActivityModel.getInstance().getActivities().remove(panel.getActivity());
+            defaultMiddlePanel.revalidate();
+            defaultMiddlePanel.repaint();
+        });
+        popupMenu2.add(deleteItem2);
+        
         // Center the frame in the middle of the screen.
         setLocation(screenSize.width/2 - getWidth()/2, screenSize.height/2 - getHeight()/2);
         
@@ -127,7 +148,41 @@ public class HealthTrackerView extends javax.swing.JFrame
     {
         ActivityModel.getInstance().addEntry(activity);
         ActivityPanel panel = new ActivityPanel(activity);
+        
         defaultMiddlePanel.add(panel);
+    }
+    
+    private void addMouseListenerToPanel(JPanel panel)
+    {
+        panel.addMouseListener(new MouseListener()
+        {
+
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                System.out.println("Mouse pressed!");
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e)
+            {
+                maybeShowPopup2(e);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e)
+            {
+                maybeShowPopup2(e);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {}
+
+            @Override
+            public void mouseExited(MouseEvent e)
+            {}
+        });
     }
     
     public final void updateVisibleActivities(boolean firstTime)
@@ -158,6 +213,10 @@ public class HealthTrackerView extends javax.swing.JFrame
                     .stream()
                     .forEach((activity) ->
                     {
+                        if (activity == null)
+                        {
+                            System.out.println("Null activity!!");
+                        }
                         Calendar cal = (Calendar) Calendar.getInstance().clone();
                         cal.setTime(activity.getTimeStamp());
                         int theYear = cal.get(Calendar.YEAR);
@@ -171,6 +230,7 @@ public class HealthTrackerView extends javax.swing.JFrame
                                     (theYear == year))
                             {
                                 ActivityPanel panel = new ActivityPanel(activity);
+                                addMouseListenerToPanel(panel);
                                 defaultMiddlePanel.add(panel);
                                 ActivityModel.getInstance().getVisibleActivities().add(activity);
                             }
@@ -182,6 +242,7 @@ public class HealthTrackerView extends javax.swing.JFrame
                                     (theYear == year))
                             {
                                 ActivityPanel panel = new ActivityPanel(activity);
+                                addMouseListenerToPanel(panel);
                                 defaultMiddlePanel.add(panel);
                                 ActivityModel.getInstance().getVisibleActivities().add(activity);
                             }
@@ -194,6 +255,7 @@ public class HealthTrackerView extends javax.swing.JFrame
                                     (theMonth + 1 == month + 1))
                             {
                                 ActivityPanel panel = new ActivityPanel(activity);
+                                addMouseListenerToPanel(panel);
                                 defaultMiddlePanel.add(panel);
                                 ActivityModel.getInstance().getVisibleActivities().add(activity);
                             }
@@ -203,6 +265,7 @@ public class HealthTrackerView extends javax.swing.JFrame
                                     (theMonth + 1 <= month))
                             {
                                 ActivityPanel panel = new ActivityPanel(activity);
+                                addMouseListenerToPanel(panel);
                                 defaultMiddlePanel.add(panel);
                                 ActivityModel.getInstance().getVisibleActivities().add(activity);
                             }
@@ -353,6 +416,15 @@ public class HealthTrackerView extends javax.swing.JFrame
         if (e.isPopupTrigger())
         {
              popupMenu.show(e.getComponent(), e.getX(), e.getY());
+        }
+    }
+    
+    private void maybeShowPopup2(MouseEvent e)
+    {
+        // If mouse click is a trigger to show a popup menu.
+        if (e.isPopupTrigger())
+        {
+             popupMenu2.show(e.getComponent(), e.getX(), e.getY());
         }
     }
     

@@ -15,12 +15,15 @@ import models.Activity;
  */
 public class ActivityPanel extends javax.swing.JPanel
 {
-
+    private Activity activity;
+    
     /**
      * Creates new form ActivityPanel
      */
     public ActivityPanel(Activity activityModel)
     {
+        this.activity = activityModel;
+        
         initComponents();
         
         String time = new SimpleDateFormat("H:mm").format(activityModel.getTimeStamp());
@@ -45,6 +48,11 @@ public class ActivityPanel extends javax.swing.JPanel
         bloodPressureLabel.setText(activityModel.getBloodPressureSystolic() + "/" + activityModel.getBloodPressureDystolic());
         bloodSugarLabel.setText(activityModel.getBloodSugar() + " mg/dl");
         dateLabel.setText(new SimpleDateFormat("MM/dd/yyyy").format(activityModel.getTimeStamp()));
+    }
+
+    public Activity getActivity()
+    {
+        return activity;
     }
 
     /**

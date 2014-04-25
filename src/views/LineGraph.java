@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import javax.swing.JPanel;
 import models.Activity;
+import models.ActivityModel;
 import static personalhealthtracker.GraphFactory.getSecondsSpent;
 import personalhealthtracker.Pair;
 
@@ -37,6 +38,10 @@ public class LineGraph extends JPanel
     {
         super.paintComponent(g);
         
+        activities = ActivityModel.getInstance().getVisibleActivities();
+        reducedList = null;
+        sortedList = null;
+        
         Graphics2D g2 = (Graphics2D) g;
         BasicStroke stroke2 = new BasicStroke(2),
                 stroke6 = new BasicStroke(6);
@@ -57,7 +62,7 @@ public class LineGraph extends JPanel
 
         if (reducedList.isEmpty())
             activities
-                    .parallelStream()
+                    .stream()
                     .forEach((activity) ->
                     {
                         if (activity.getActivity() == selectedStat)
