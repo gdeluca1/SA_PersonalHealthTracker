@@ -8,11 +8,18 @@ package views;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 import javax.swing.JPanel;
 import models.Activity;
 import models.ActivityModel;
@@ -21,9 +28,8 @@ import personalhealthtracker.Pair;
 
 public class LineGraph extends JPanel
 {
-    private ArrayList<Activity> activities,
-            reducedList = null,
-            sortedList = null;
+    private ArrayList<Activity> activities;
+    private TreeMap<Date, Integer> timePerDay;
     private final int selectedStat;
     private final boolean autoUpdate;
     private final String title;
@@ -46,8 +52,7 @@ public class LineGraph extends JPanel
         if (autoUpdate)
         {
             activities = ActivityModel.getInstance().getVisibleActivities();
-            reducedList = null;
-            sortedList = null;
+            timePerDay = null;
         }
         
         Graphics2D g2 = (Graphics2D) g;
@@ -62,64 +67,65 @@ public class LineGraph extends JPanel
         int graphWidth = (int) (11 * widthOffset);
         int graphHeight = (int) (6 * heightOffset);
 
+        // Draw the axes.
         g2.drawLine(widthOffset, heightOffset, widthOffset, graphHeight + heightOffset);
         g2.drawLine(widthOffset, graphHeight + heightOffset, graphWidth, graphHeight + heightOffset);
+        
+        g2.setFont(new Font(Font.SERIF, Font.PLAIN, 20));
+        
+         // Label the axes.
+        String time = "Time";
+        
+        
+        AffineTransform orig = g2.getTransform();
+        g2.rotate(-Math.PI/2, 3 * widthOffset/4, 4 * heightOffset);
+        g2.drawString(time, 3 * widthOffset/4, 4 * heightOffset);
+        g2.setTransform(orig);
+        
+        String date = "Date";
+        g2.drawString(date, graphWidth/2, (int)(graphHeight + 1.5 * heightOffset));
+        
+        
+        // Use FontMetrics to draw the string in the middle of the panel.
+        FontMetrics fm = g2.getFontMetrics();
+        Rectangle2D rect = fm.getStringBounds(title, g2);
+        g2.drawString(title, (int) (graphWidth/2 - rect.getWidth()/2), (int) (heightOffset/2));
 
-        // This list will store a filtered version of the list, matching the activities which the user wants.
-        if (reducedList == null) reducedList = new ArrayList<>();
-
-        if (reducedList.isEmpty())
+        // This map stores the amount of time the user worked out each day.
+        if (timePerDay == null)        
+            timePerDay = new TreeMap<>((date1, date2) ->
+            {
+                return date1.compareTo(date2);
+            });
+        
+        // Only add values for the specified activity.
+        if (timePerDay.isEmpty())
             activities
                     .stream()
                     .forEach((activity) ->
                     {
                         if (activity.getActivity() == selectedStat)
                         {
-                            reducedList.add(activity);
+                            // If time has already been done that day, add to it, don't replace it.
+                            Integer currentTime = timePerDay.get(activity.getTimeStamp());
+                            int offset = 0;
+                            if (currentTime != null) offset = currentTime;
+                            
+                            timePerDay.put(activity.getTimeStamp(), offset + getSecondsSpent(activity));
                         }
                     });
         
-        Collections.sort(reducedList, (a, b) ->
-        {
-            return a.getTimeStamp().compareTo(b.getTimeStamp());
-        });
-        
         // If we try to paint anything when there's nothing, we'll get null pointer exceptions.
-        if (reducedList.isEmpty())
+        if (timePerDay.isEmpty())
         {
             return;
         }
 
-        // Create a parallel list to store the values in a sorted order.
-        if (sortedList == null) sortedList = (ArrayList<Activity>) reducedList.clone();
-        
-//        System.out.println(sortedList.size());
-//        long count = sortedList
-//                .parallelStream()
-//                .filter((activity) ->
-//                {
-//                    boolean b = (activity == null);
-//                    if (b == true) System.out.println(sortedList.indexOf(activity));
-//                    return b;
-//                })
-//                .count();
-//        System.out.println(count + " null.");
-//        System.out.println();
-
-        // Sort by time spent.
-        Collections.sort(sortedList, (a, b) ->
-        {
-            int timeA = getSecondsSpent(a);
-            int timeB = getSecondsSpent(b);
-
-            return Integer.compare(timeA, timeB);
-        });
-
         // The max and min value in the list.
-        int max = getSecondsSpent(sortedList.get(sortedList.size() - 1));
-        int min = getSecondsSpent(sortedList.get(0));
+        int max = Collections.max(timePerDay.values());
+        int min = Collections.min(timePerDay.values());
 
-        int n = sortedList.size();
+        int n = timePerDay.size();
         double pointOffsetX = graphWidth/(n + 1);
 
         int validDistance = (int) 18 * graphHeight / 20;
@@ -139,14 +145,15 @@ public class LineGraph extends JPanel
         g2.draw(minLine);
         g2.setColor(Color.BLACK);
 
-        // Iterate through the list, graphing each point.
-        for (int i = 0; i < n; i++)
+        int i = 0;
+        // Iterate through the list and draw each point.
+        for (Entry<Date, Integer> entry : timePerDay.entrySet())
         {
             previousPoint = currentPoint;
 
             xPosition = (i + 1) * pointOffsetX + widthOffset;
 
-            p = getSecondsSpent(reducedList.get(i));
+            p = entry.getValue();
             d1 = max - p;
             d2 = p - min; 
 
@@ -168,6 +175,9 @@ public class LineGraph extends JPanel
                 g2.drawLine(previousPoint.getValue1().intValue(), previousPoint.getValue2().intValue(), 
                         currentPoint.getValue1().intValue(), currentPoint.getValue2().intValue());
             }
+            
+            // Keep track of which point number this is.
+            i++;
         }
     }
 }
