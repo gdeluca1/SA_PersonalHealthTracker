@@ -1,10 +1,16 @@
 package controllers;
 
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.ServerSocket;
@@ -12,15 +18,18 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ButtonGroup;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 import models.Activity;
+import models.ActivityModel;
 import models.ProfileModel;
 import personalhealthtracker.GraphFactory;
 import views.CalendarPanel;
@@ -242,8 +251,8 @@ public class HealthTrackerController
         
         view.addPrintButtonListener((e)->
         {
-            JOptionPane.showMessageDialog(null,
-                    "This button will allow you to print your data.");
+//            printComponents(view.getDefaultMiddlePanel(), view.getGraphPanel());
+            printComponent(view.getDefaultMiddlePanel());
         });
         
         // Note: The import button is solely for Gennaro's and Sumbhav's CSE 360 Honors Contract.
@@ -387,4 +396,80 @@ public class HealthTrackerController
             return true;
         }
     }
+    
+    public void printComponent(JComponent comp)
+    {
+        if (comp.getComponent(0) == null) return;
+        int heightActivity = comp.getComponent(0).getHeight();
+        int activityCount = ActivityModel.getInstance().getVisibleActivities().size();
+        AtomicInteger status = new AtomicInteger(0);
+        
+        PrinterJob pj = PrinterJob.getPrinterJob();
+        pj.setJobName(" Print Component ");
+
+        pj.setPrintable ((Graphics pg, PageFormat pf, int pageNum) ->
+        {
+            int activitiesPerPage = (int) (pf.getImageableHeight() - pf.getImageableY()) / heightActivity;
+            int totalPages = (activityCount / activitiesPerPage) - 1;
+            if (pageNum > totalPages)
+            {
+                return Printable.NO_SUCH_PAGE;
+            }
+            
+            Graphics2D g2 = (Graphics2D) pg;
+            
+            for (int i = 0; i < activitiesPerPage; i++, status.getAndIncrement())
+            {
+                if (status.get() < comp.getComponentCount())
+                {
+                     g2.translate(pf.getImageableX(), pf.getImageableY() + status.get() * heightActivity);
+//                      g2.translate(pf.getImageableX(), pf.getImageableY() - pageNum * heightActivity * activitiesPerPage);
+                     comp.getComponent(status.get()).paint(g2);
+                }
+            }
+            
+            return Printable.PAGE_EXISTS;
+        });
+        if (pj.printDialog() == false)
+        return;
+
+        try {
+              pj.print();
+        } catch (PrinterException ex) {
+              // handle exception
+        }
+  }
+    
+    private void printComponents(JComponent... comps)
+    {
+        PrinterJob pj = PrinterJob.getPrinterJob();
+        pj.setJobName(" Print Component ");
+
+        pj.setPrintable ((Graphics pg, PageFormat pf, int pageNum) ->
+        {
+            if (pageNum > 1){
+                return Printable.NO_SUCH_PAGE;
+            }
+            
+            else
+            {
+                Graphics2D g2 = (Graphics2D) pg;
+                g2.translate(pf.getImageableX(), pf.getImageableY());
+                comps[pageNum].paint(g2);
+            }
+            
+            return Printable.PAGE_EXISTS;
+        });
+        if (! pj.printDialog())
+            return;
+
+        try 
+        {
+              pj.print();
+        } 
+        catch (PrinterException ex) 
+        {  
+            ex.printStackTrace();
+        }
+      }
 }

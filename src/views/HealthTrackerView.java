@@ -488,6 +488,16 @@ public class HealthTrackerView extends javax.swing.JFrame
     {
         return dateLabel;
     }
+
+    public JPanel getDefaultMiddlePanel()
+    {
+        return defaultMiddlePanel;
+    }
+
+    public JPanel getGraphPanel()
+    {
+        return graphPanel;
+    }
     
     // Code below this line is generated code.
     
