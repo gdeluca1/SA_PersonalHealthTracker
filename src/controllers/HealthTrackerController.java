@@ -206,7 +206,7 @@ public class HealthTrackerController
         
         view.getTrendingPanel().addBarGraphButtonListener((e) ->
         {
-            view.addGraphPanel(GraphFactory.getBarChart());
+            view.addGraphPanel(GraphFactory.getBarChart(view.getTrendingPanel().autoUpdateBar()));
         });
         
         view.getTrendingPanel().addPieChartButtonListener((e) ->

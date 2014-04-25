@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ProfileModel
 {
-    public enum ProfileItem {USERNAME, PASSWORD, QUESTION, ANSWER};
+    public enum ProfileItem {USERNAME, PASSWORD, QUESTION, ANSWER, BIRTHMONTH, BIRTHDAY, BIRTHYEAR};
     
     private LinkedList<LinkedList<String>> profileList;
     private String currentUsername;
@@ -34,6 +34,9 @@ public class ProfileModel
             adminAccount.add(ProfileItem.PASSWORD.ordinal(), "password");
             adminAccount.add(ProfileItem.QUESTION.ordinal(), null);
             adminAccount.add(ProfileItem.ANSWER.ordinal(), null);
+            adminAccount.add(ProfileItem.BIRTHMONTH.ordinal(), "1");
+            adminAccount.add(ProfileItem.BIRTHDAY.ordinal(), "1");
+            adminAccount.add(ProfileItem.BIRTHYEAR.ordinal(), "1994");
             profileList.add(adminAccount);
         }
     }
@@ -67,7 +70,7 @@ public class ProfileModel
      * @param securityAnswer
      * @return 
      */
-    public boolean createProfile(String username, String password, String securityQuestion, String securityAnswer)
+    public boolean createProfile(String username, String password, String securityQuestion, String securityAnswer, String birthMonth, String birthDay, String birthYear)
     {
         boolean toReturn = ! profileList
                 .parallelStream()
@@ -86,6 +89,9 @@ public class ProfileModel
         userProfile.add(ProfileItem.PASSWORD.ordinal(), password);
         userProfile.add(ProfileItem.QUESTION.ordinal(), securityQuestion);
         userProfile.add(ProfileItem.ANSWER.ordinal(), securityAnswer);
+        userProfile.add(ProfileItem.BIRTHMONTH.ordinal(), birthMonth);
+        userProfile.add(ProfileItem.BIRTHDAY.ordinal(), birthDay);
+        userProfile.add(ProfileItem.BIRTHYEAR.ordinal(), birthYear);
         
         // Add the user's profile to the linked list.
         profileList.add(userProfile);
