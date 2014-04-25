@@ -18,10 +18,13 @@ public class Activity implements Serializable
     
     private int activity;
     private Date timeStamp;
-    private String pulse, bloodPressure, bloodSugar;
+    private int pulse, 
+            bloodPressureSystolic, //Top number in BP
+            bloodPressureDystolic, //Bottom number in BP
+            bloodSugar;
     private int hoursSpent, minutesSpent, secondsSpent;
     
-    public Activity(int activity, Date timeStamp, int hoursSpent, int minutesSpent, int secondsSpent, String pulse, String bloodPressure, String bloodSugar)
+    public Activity(int activity, Date timeStamp, int hoursSpent, int minutesSpent, int secondsSpent, int pulse, int bloodPressureS, int bloodPressureD, int bloodSugar)
     {
         this.activity = activity;
         this.timeStamp = timeStamp;
@@ -30,8 +33,10 @@ public class Activity implements Serializable
         this.secondsSpent = secondsSpent;
                 
         this.pulse = pulse;
-        this.bloodPressure = bloodPressure;
         this.bloodSugar = bloodSugar;
+        
+        bloodPressureSystolic = bloodPressureS;
+        bloodPressureDystolic = bloodPressureD;
     }
     
     public int getActivity()
@@ -73,17 +78,22 @@ public class Activity implements Serializable
         return secondsSpent;
     }
 
-    public String getPulse()
+    public int getPulse()
     {
         return pulse;
     }
 
-    public String getBloodPressure()
+    public int getBloodPressureSystolic()
     {
-        return bloodPressure;
+        return bloodPressureSystolic;
+    }
+    
+    public int getBloodPressureDystolic()
+    {
+        return bloodPressureDystolic;
     }
 
-    public String getBloodSugar()
+    public int getBloodSugar()
     {
         return bloodSugar;
     }

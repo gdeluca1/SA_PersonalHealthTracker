@@ -7,7 +7,6 @@
 package views;
 
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import models.Activity;
 
 /**
@@ -43,7 +42,7 @@ public class ActivityPanel extends javax.swing.JPanel
         
         durationLabel.setText(activityModel.getTimeSpent());
         pulseLabel.setText(activityModel.getPulse() + " bpm");
-        bloodPressureLabel.setText(activityModel.getBloodPressure());
+        bloodPressureLabel.setText(activityModel.getBloodPressureSystolic() + "/" + activityModel.getBloodPressureDystolic());
         bloodSugarLabel.setText(activityModel.getBloodSugar() + " mg/dl");
         dateLabel.setText(new SimpleDateFormat("MM/dd/yyyy").format(activityModel.getTimeStamp()));
     }

@@ -94,19 +94,22 @@ public class AddActivityPanel extends javax.swing.JPanel
         int minutes = Integer.parseInt(minutesTextField.getText());
         int seconds = Integer.parseInt(secondsTextField.getText());
         
-        String pulse = pulseTextField.getText();
-        String bloodPressure;
+        int pulse = Integer.parseInt(pulseTextField.getText());
+        int bloodPressureS;
+        int bloodPressureD;
         if (Integer.parseInt(bloodPressureTextField1.getText()) == 0 || Integer.parseInt(bloodPressureTextField2.getText()) == 0)
         {
-            bloodPressure = "0";
+            bloodPressureS = 0;
+            bloodPressureD = 0;
         }
         else
         {
-            bloodPressure = bloodPressureTextField1.getText() + "/" + bloodPressureTextField2.getText();
+            bloodPressureS = Integer.parseInt(bloodPressureTextField1.getText());
+            bloodPressureD = Integer.parseInt(bloodPressureTextField2.getText());
         }
-        String bloodSugar = bloodSugarTextField.getText();
+        int bloodSugar = Integer.parseInt(bloodSugarTextField.getText());
         
-        return new Activity(activity, timeStamp, hours, minutes, seconds, pulse, bloodPressure, bloodSugar);
+        return new Activity(activity, timeStamp, hours, minutes, seconds, pulse, bloodPressureS, bloodPressureD, bloodSugar);
     }
     
     /**
