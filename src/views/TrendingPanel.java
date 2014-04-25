@@ -64,6 +64,21 @@ public class TrendingPanel extends javax.swing.JPanel
             return Activity.ActivityType.SEDENTARY;
         }
     }
+    
+    public boolean autoUpdateBar()
+    {
+        return autoUpdateBar.isSelected();
+    }
+    
+    public boolean autoUpdatePie()
+    {
+        return autoUpdatePie.isSelected();
+    }
+    
+    public boolean autoUpdateLine()
+    {
+        return autoUpdateLine.isSelected();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -81,6 +96,9 @@ public class TrendingPanel extends javax.swing.JPanel
         strengthRadioButton = new javax.swing.JRadioButton();
         cardioRadioButton = new javax.swing.JRadioButton();
         sedentaryRadioButton = new javax.swing.JRadioButton();
+        autoUpdateBar = new javax.swing.JCheckBox();
+        autoUpdatePie = new javax.swing.JCheckBox();
+        autoUpdateLine = new javax.swing.JCheckBox();
 
         barGraphButton.setText("Add Bar Graph");
 
@@ -94,6 +112,12 @@ public class TrendingPanel extends javax.swing.JPanel
 
         sedentaryRadioButton.setText("Sedentary Line Graph");
 
+        autoUpdateBar.setText("Keep updated");
+
+        autoUpdatePie.setText("Keep updated");
+
+        autoUpdateLine.setText("Keep updated");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -103,21 +127,36 @@ public class TrendingPanel extends javax.swing.JPanel
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(sedentaryRadioButton)
                     .addComponent(cardioRadioButton)
-                    .addComponent(lineGraphButton)
-                    .addComponent(pieChartButton)
-                    .addComponent(barGraphButton)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lineGraphButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(autoUpdateLine))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(pieChartButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(autoUpdatePie))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(barGraphButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(autoUpdateBar))
                     .addComponent(strengthRadioButton))
-                .addContainerGap(99, Short.MAX_VALUE))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(44, 44, 44)
-                .addComponent(barGraphButton)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(barGraphButton)
+                    .addComponent(autoUpdateBar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pieChartButton)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(pieChartButton)
+                    .addComponent(autoUpdatePie))
                 .addGap(18, 18, 18)
-                .addComponent(lineGraphButton)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lineGraphButton)
+                    .addComponent(autoUpdateLine))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cardioRadioButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -130,6 +169,9 @@ public class TrendingPanel extends javax.swing.JPanel
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox autoUpdateBar;
+    private javax.swing.JCheckBox autoUpdateLine;
+    private javax.swing.JCheckBox autoUpdatePie;
     private javax.swing.JButton barGraphButton;
     private javax.swing.JRadioButton cardioRadioButton;
     private javax.swing.JButton lineGraphButton;

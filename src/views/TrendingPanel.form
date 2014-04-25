@@ -21,12 +21,24 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="sedentaryRadioButton" min="-2" max="-2" attributes="0"/>
                   <Component id="cardioRadioButton" min="-2" max="-2" attributes="0"/>
-                  <Component id="lineGraphButton" min="-2" max="-2" attributes="0"/>
-                  <Component id="pieChartButton" min="-2" max="-2" attributes="0"/>
-                  <Component id="barGraphButton" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <Component id="lineGraphButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="autoUpdateLine" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Component id="pieChartButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="autoUpdatePie" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Component id="barGraphButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="autoUpdateBar" min="-2" max="-2" attributes="0"/>
+                  </Group>
                   <Component id="strengthRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="99" max="32767" attributes="0"/>
+              <EmptySpace pref="21" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -34,11 +46,20 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="44" max="-2" attributes="0"/>
-              <Component id="barGraphButton" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="barGraphButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="autoUpdateBar" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="pieChartButton" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="pieChartButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="autoUpdatePie" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="lineGraphButton" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lineGraphButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="autoUpdateLine" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="cardioRadioButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
@@ -79,6 +100,21 @@
     <Component class="javax.swing.JRadioButton" name="sedentaryRadioButton">
       <Properties>
         <Property name="text" type="java.lang.String" value="Sedentary Line Graph"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="autoUpdateBar">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Keep updated"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="autoUpdatePie">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Keep updated"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="autoUpdateLine">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Keep updated"/>
       </Properties>
     </Component>
   </SubComponents>

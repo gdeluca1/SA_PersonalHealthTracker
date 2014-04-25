@@ -48,9 +48,9 @@ public class GraphFactory
         };
     }
     
-    public static JPanel getLineChart(int selectedStat)
+    public static JPanel getLineChart(int selectedStat, boolean autoUpdate)
     {         
-        return new LineGraph(ActivityModel.getInstance().getVisibleActivities(), selectedStat);
+        return new LineGraph(ActivityModel.getInstance().getVisibleActivities(), selectedStat, autoUpdate);
     }
     
     public static JPanel getBarChart()
