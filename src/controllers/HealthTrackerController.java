@@ -1,6 +1,5 @@
 package controllers;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -50,7 +49,7 @@ public class HealthTrackerController
     
     public HealthTrackerController(HealthTrackerView view)
     {
-        this.view = view;
+        HealthTrackerController.view = view;
         
         // Add a window listener. When the user attempts to x out, make sure they want to logout.
         view.addWindowListener(new WindowListener()
@@ -251,8 +250,7 @@ public class HealthTrackerController
         
         view.addPrintButtonListener((e)->
         {
-//            printComponents(view.getDefaultMiddlePanel(), view.getGraphPanel());
-            printComponent(view.getDefaultMiddlePanel(), view.getGraphPanel());
+            printComponents(view.getDefaultMiddlePanel(), view.getGraphPanel());
         });
         
         // Note: The import button is solely for Gennaro's and Sumbhav's CSE 360 Honors Contract.
@@ -397,7 +395,7 @@ public class HealthTrackerController
         }
     }
     
-    public void printComponents(JComponent activityPanel, JComponent graphPanel)
+    private void printComponents(JComponent activityPanel, JComponent graphPanel)
     {
         // If no activities have been added, don't even try to print.
         if (activityPanel.getComponent(0) == null) return;
@@ -405,6 +403,25 @@ public class HealthTrackerController
         // Determine the hiehgt of an activity and how many activities will be printed.
         int heightActivity = activityPanel.getComponent(0).getHeight();
         int activityCount = ActivityModel.getInstance().getVisibleActivities().size();
+        
+        // Determine if there are any graphs to be printed. 
+        // Use > 1, since the first component will always be a Box verticalStrut.
+        boolean hasGraphs = (graphPanel.getComponentCount() > 1);
+        
+        // Determine the height of a graph and how many graphs will be printed.
+        final int heightGraph;
+        final int graphCount;
+        
+        if (hasGraphs)
+        {
+            heightGraph = graphPanel.getComponent(1).getHeight();
+            graphCount = graphPanel.getComponentCount() - 1;
+        }
+        else
+        {
+            heightGraph = -1;
+            graphCount = 0;
+        }
         
         // Instantiate a printer job.
         PrinterJob pj = PrinterJob.getPrinterJob();
@@ -415,27 +432,64 @@ public class HealthTrackerController
         {
             // Calculate how many activities will fit on a page and how many pages will be needed to print them all.
             int activitiesPerPage = (int) (pf.getImageableHeight() - pf.getImageableY()) / heightActivity;
+            // Multiply by 1.0 to do floating point division and avoid truncation.
             int totalPages = (int) Math.ceil((1.0 * activityCount / activitiesPerPage) - 1);
+            int activityPages = totalPages;
+            int graphsPerPage = -1;
+            
+            if (hasGraphs)
+            {
+                graphsPerPage = (int) (pf.getImageableHeight() - pf.getImageableY()) / heightGraph;
+                totalPages += (int) Math.ceil((1.0 * graphCount / graphsPerPage));
+            }
             
             if (pageNum > totalPages)
             {
                 return Printable.NO_SUCH_PAGE;
             }
             
-            // Print each activity.
             Graphics2D g2 = (Graphics2D) pg;
             
-            for (int i = 0; i < activitiesPerPage; i++)
+            if (pageNum <= activityPages)
             {
-                if (i + activitiesPerPage * pageNum < activityPanel.getComponentCount())
+                // Print each activity.
+                for (int i = 0; i < activitiesPerPage; i++)
                 {
-                    // If this doesn't go at the top of the page, move the graphics pointer down one activity.
-                     if (i > 0)
-                         g2.translate(pf.getImageableX(), pf.getImageableY() + heightActivity);
-                     else
-                         g2.translate(pf.getImageableX(), pf.getImageableY());
-                     
-                     activityPanel.getComponent(i + activitiesPerPage * pageNum).paint(g2);
+                    if (i + activitiesPerPage * pageNum < activityPanel.getComponentCount())
+                    {
+                        // If this doesn't go at the top of the page, move the graphics pointer down one activity.
+                         if (i > 0)
+                             g2.translate(pf.getImageableX(), pf.getImageableY() + heightActivity);
+                         else
+                             g2.translate(pf.getImageableX(), pf.getImageableY());
+
+                         activityPanel.getComponent(i + activitiesPerPage * pageNum).paint(g2);
+                    }
+                }
+            }
+            
+            else
+            {
+                // We shouldn't be in this loop if there are no graphs to be printed.
+                assert hasGraphs;
+                
+                // Print any graphs.
+                for (int i = 0; i < graphsPerPage; i++)
+                {
+                    if (i + graphsPerPage * (pageNum - activityPages - 1) < graphCount)
+                    {
+                        // If this doesn't go at the top of the page, move the graphics pointer down one activity.
+                         if (i > 0)
+                             g2.translate(pf.getImageableX(), pf.getImageableY() + heightGraph);
+                         else
+                             g2.translate(pf.getImageableX(), pf.getImageableY());
+
+                         graphPanel.getComponent(1 + i + graphsPerPage * (pageNum - activityPages - 1)).paint(g2);
+                    }
+                    else
+                    {
+                        break;
+                    }
                 }
             }
             
