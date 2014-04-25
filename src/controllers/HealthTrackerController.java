@@ -117,7 +117,7 @@ public class HealthTrackerController
             // Make sure the user actually wants to add this activity.
             else if (JOptionPane.showConfirmDialog(null, "Are you sure you would like to add this activity?") == JOptionPane.YES_OPTION) 
             {
-                view.addActivityToPanel(view.getAddActivityPanel().getActivity());
+                view.addActivityToPanel(view.getAddActivityPanel().getActivity(view.getDate()));
                 view.updateVisibleActivities(false);
                 // Switch back to the default panel and reset the add activity panel.
                 view.switchMiddlePanel(HealthTrackerView.DEFAULT_PANEL);

@@ -9,12 +9,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
-import java.io.InvalidClassException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -462,6 +462,21 @@ public class HealthTrackerView extends javax.swing.JFrame
         graphPanel.add(graph);
         graphPanel.revalidate();
         graphPanel.repaint();
+    }
+    
+    public Date getDate()
+    {
+        try
+        {
+            return new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH).parse(dateLabel.getText());
+        }
+        catch (ParseException ex)
+        {
+            Logger.getLogger(HealthTrackerView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        // If parsing fails for some unforseen reason, just return today.
+        return Calendar.getInstance().getTime();
     }
     
     // Code below this line is generated code.

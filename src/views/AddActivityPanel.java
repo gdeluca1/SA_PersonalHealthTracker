@@ -76,10 +76,9 @@ public class AddActivityPanel extends javax.swing.JPanel
         submitButton.addActionListener(listener);
     }
     
-    public Activity getActivity()
+    public Activity getActivity(Date timeStamp)
     {
         int activity = activityComboBox.getSelectedIndex();
-        Date timeStamp = Calendar.getInstance().getTime();
         
         // If any text fields are empty, set them to 0.
         resetIfEmpty(hoursTextField);
