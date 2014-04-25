@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -477,6 +478,11 @@ public class HealthTrackerView extends javax.swing.JFrame
         
         // If parsing fails for some unforseen reason, just return today.
         return Calendar.getInstance().getTime();
+    }
+
+    public JLabel getDateLabel()
+    {
+        return dateLabel;
     }
     
     // Code below this line is generated code.

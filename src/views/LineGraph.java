@@ -26,13 +26,15 @@ public class LineGraph extends JPanel
             sortedList = null;
     private final int selectedStat;
     private final boolean autoUpdate;
+    private final String title;
     
-    public LineGraph(ArrayList<Activity> activities, int selectedStat, boolean autoUpdate)
+    public LineGraph(ArrayList<Activity> activities, int selectedStat, boolean autoUpdate, String graphTitle)
     {
         super();
         this.activities = activities;
         this.selectedStat = selectedStat;
         this.autoUpdate = autoUpdate;
+        this.title = graphTitle;
     }
     
     @Override

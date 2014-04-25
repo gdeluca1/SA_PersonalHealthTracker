@@ -216,8 +216,28 @@ public class HealthTrackerController
         
         view.getTrendingPanel().addLineGraphButtonListener((e) ->
         {
-            view.addGraphPanel(GraphFactory.getLineChart(view.getTrendingPanel().getSelectedRadioButton(), 
-                    view.getTrendingPanel().autoUpdateLine()));
+            String graphTitle;
+            switch (view.getViewMode())
+            {
+                case HealthTrackerView.YEARLY:
+                    graphTitle = "Year ";
+                    break;
+                case HealthTrackerView.MONTHLY:
+                    graphTitle = "Month ";
+                    break;
+                default:
+                    graphTitle = "Week ";
+            }
+            
+            graphTitle += "of " + view.getDateLabel().getText();
+            
+            view.addGraphPanel(
+                    GraphFactory.getLineChart(
+                            view.getTrendingPanel().getSelectedRadioButton(),
+                            view.getTrendingPanel().autoUpdateLine(),
+                            graphTitle
+                    )
+            );
         });
         
         view.addPrintButtonListener((e)->
