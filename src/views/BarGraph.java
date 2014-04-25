@@ -143,9 +143,9 @@ public class BarGraph extends JPanel{
                 
                 
                 boxAdderSystolic = (averageBloodPressureSystolic-BLOOD_PRESSURE_SYSTOLIC)/BLOOD_PRESSURE_SYSTOLIC;
-                System.out.println("BloodPressureSystolic: " + boxAdderSystolic);
+//                System.out.println("BloodPressureSystolic: " + boxAdderSystolic);
                 boxAdderDystolic = (averageBloodPressureDystolic-BLOOD_PRESSURE_DYSTOLIC)/BLOOD_PRESSURE_DYSTOLIC;
-                System.out.println("BloodPressureDystolic: " + boxAdderDystolic);
+//                System.out.println("BloodPressureDystolic: " + boxAdderDystolic);
                 
                 boxAdderBloodSugar = 0;
                 if(averageBloodSugar < BLOOD_SUGAR_MIN){

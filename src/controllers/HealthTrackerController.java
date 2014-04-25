@@ -1,5 +1,6 @@
 package controllers;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -18,7 +19,6 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ButtonGroup;
@@ -252,7 +252,7 @@ public class HealthTrackerController
         view.addPrintButtonListener((e)->
         {
 //            printComponents(view.getDefaultMiddlePanel(), view.getGraphPanel());
-            printComponent(view.getDefaultMiddlePanel());
+            printComponent(view.getDefaultMiddlePanel(), view.getGraphPanel());
         });
         
         // Note: The import button is solely for Gennaro's and Sumbhav's CSE 360 Honors Contract.
@@ -397,79 +397,62 @@ public class HealthTrackerController
         }
     }
     
-    public void printComponent(JComponent comp)
+    public void printComponents(JComponent activityPanel, JComponent graphPanel)
     {
-        if (comp.getComponent(0) == null) return;
-        int heightActivity = comp.getComponent(0).getHeight();
-        int activityCount = ActivityModel.getInstance().getVisibleActivities().size();
-        AtomicInteger status = new AtomicInteger(0);
+        // If no activities have been added, don't even try to print.
+        if (activityPanel.getComponent(0) == null) return;
         
+        // Determine the hiehgt of an activity and how many activities will be printed.
+        int heightActivity = activityPanel.getComponent(0).getHeight();
+        int activityCount = ActivityModel.getInstance().getVisibleActivities().size();
+        
+        // Instantiate a printer job.
         PrinterJob pj = PrinterJob.getPrinterJob();
-        pj.setJobName(" Print Component ");
+        pj.setJobName("Activity Report");
 
+        // Draw what will be printed to the page.
         pj.setPrintable ((Graphics pg, PageFormat pf, int pageNum) ->
         {
+            // Calculate how many activities will fit on a page and how many pages will be needed to print them all.
             int activitiesPerPage = (int) (pf.getImageableHeight() - pf.getImageableY()) / heightActivity;
-            int totalPages = (activityCount / activitiesPerPage) - 1;
+            int totalPages = (int) Math.ceil((1.0 * activityCount / activitiesPerPage) - 1);
+            
             if (pageNum > totalPages)
             {
                 return Printable.NO_SUCH_PAGE;
             }
             
+            // Print each activity.
             Graphics2D g2 = (Graphics2D) pg;
             
-            for (int i = 0; i < activitiesPerPage; i++, status.getAndIncrement())
+            for (int i = 0; i < activitiesPerPage; i++)
             {
-                if (status.get() < comp.getComponentCount())
+                if (i + activitiesPerPage * pageNum < activityPanel.getComponentCount())
                 {
-                     g2.translate(pf.getImageableX(), pf.getImageableY() + status.get() * heightActivity);
-//                      g2.translate(pf.getImageableX(), pf.getImageableY() - pageNum * heightActivity * activitiesPerPage);
-                     comp.getComponent(status.get()).paint(g2);
+                    // If this doesn't go at the top of the page, move the graphics pointer down one activity.
+                     if (i > 0)
+                         g2.translate(pf.getImageableX(), pf.getImageableY() + heightActivity);
+                     else
+                         g2.translate(pf.getImageableX(), pf.getImageableY());
+                     
+                     activityPanel.getComponent(i + activitiesPerPage * pageNum).paint(g2);
                 }
             }
             
             return Printable.PAGE_EXISTS;
         });
+        
+        // If the user presses the cancel button, exit the method.
         if (pj.printDialog() == false)
-        return;
-
-        try {
-              pj.print();
-        } catch (PrinterException ex) {
-              // handle exception
-        }
-  }
-    
-    private void printComponents(JComponent... comps)
-    {
-        PrinterJob pj = PrinterJob.getPrinterJob();
-        pj.setJobName(" Print Component ");
-
-        pj.setPrintable ((Graphics pg, PageFormat pf, int pageNum) ->
-        {
-            if (pageNum > 1){
-                return Printable.NO_SUCH_PAGE;
-            }
-            
-            else
-            {
-                Graphics2D g2 = (Graphics2D) pg;
-                g2.translate(pf.getImageableX(), pf.getImageableY());
-                comps[pageNum].paint(g2);
-            }
-            
-            return Printable.PAGE_EXISTS;
-        });
-        if (! pj.printDialog())
             return;
 
         try 
         {
-              pj.print();
+            pj.print();
         } 
         catch (PrinterException ex) 
-        {  
-            ex.printStackTrace();
+        {
+            JOptionPane.showMessageDialog(null, "Error printing!");
         }
-      }
+    }
 }
