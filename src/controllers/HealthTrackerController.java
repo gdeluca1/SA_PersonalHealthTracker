@@ -23,7 +23,6 @@ import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 import models.Activity;
 import models.ProfileModel;
 import personalhealthtracker.GraphFactory;
-import views.AddActivityPanel;
 import views.CalendarPanel;
 import views.HealthTrackerView;
 
@@ -119,6 +118,7 @@ public class HealthTrackerController
             else if (JOptionPane.showConfirmDialog(null, "Are you sure you would like to add this activity?") == JOptionPane.YES_OPTION) 
             {
                 view.addActivityToPanel(view.getAddActivityPanel().getActivity());
+                view.updateVisibleActivities(false);
                 // Switch back to the default panel and reset the add activity panel.
                 view.switchMiddlePanel(HealthTrackerView.DEFAULT_PANEL);
                 view.getAddActivityPanel().resetPanel();
