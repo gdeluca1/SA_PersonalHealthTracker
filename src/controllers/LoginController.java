@@ -54,7 +54,10 @@ public class LoginController
                     boolean successful = ProfileModel.getInstance().createProfile(dialog.getUsername(),
                             dialog.getPassword(), 
                             dialog.getRecoveryQuestion(), 
-                            dialog.getRecoveryAnswer());
+                            dialog.getRecoveryAnswer(),
+                            dialog.getBirthMonth(),
+                            dialog.getBirthDay(),
+                            dialog.getBirthYear());
                     
                     if (! successful)
                     {
@@ -72,6 +75,23 @@ public class LoginController
                 {
                     JOptionPane.showMessageDialog(null, "Please complete all fields.");
                 }
+            });
+            
+            dialog.addMonthBoxListener((e2) ->
+            {
+                if(dialog.getMonthBox().getSelectedItem().equals("January") || dialog.getMonthBox().getSelectedItem().equals("March") ||
+                        dialog.getMonthBox().getSelectedItem().equals("May") || dialog.getMonthBox().getSelectedItem().equals("July") ||
+                                dialog.getMonthBox().getSelectedItem().equals("August") || dialog.getMonthBox().getSelectedItem().equals("October") ||
+                        dialog.getMonthBox().getSelectedItem().equals("December")){
+                    dialog.setDayBoxList(new String[] {"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31"});
+                }
+                else if(dialog.getMonthBox().getSelectedItem().equals("February")){
+                    dialog.setDayBoxList(new String[] {"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29"});
+                }
+                else{
+                    dialog.setDayBoxList(new String[] {"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30"});
+                }
+                
             });
             
             dialog.setVisible(true);
