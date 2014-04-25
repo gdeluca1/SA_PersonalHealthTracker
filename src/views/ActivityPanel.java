@@ -31,13 +31,13 @@ public class ActivityPanel extends javax.swing.JPanel
         switch (activityModel.getActivity())
         {
             case Activity.ActivityType.CARDIO:
-                activityLabel.setText("Cardio @ "  + time);
+                activityLabel.setText("Cardio");
                 break;
             case Activity.ActivityType.SEDENTARY:
-                activityLabel.setText("Sedentary @ " + time);
+                activityLabel.setText("Sedentary");
                 break;
             case Activity.ActivityType.STRENGTH:
-                activityLabel.setText("Strength @ " + time);
+                activityLabel.setText("Strength");
                 break;
             default:
                 activityLabel.setText("Error");

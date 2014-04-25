@@ -19,8 +19,10 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -67,6 +69,7 @@ public class HealthTrackerView extends javax.swing.JFrame
         initComponents();
         
         graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.Y_AXIS));
+        graphPanel.add(Box.createVerticalStrut(10));
         popupMenu = new JPopupMenu();
         popupMenu2 = new JPopupMenu();
         
@@ -116,8 +119,12 @@ public class HealthTrackerView extends javax.swing.JFrame
             ActivityPanel panel = (ActivityPanel)parent;
             defaultMiddlePanel.remove(panel);
             ActivityModel.getInstance().getActivities().remove(panel.getActivity());
+            updateVisibleActivities(false);
             defaultMiddlePanel.revalidate();
             defaultMiddlePanel.repaint();
+            
+            graphPanel.revalidate();
+            graphPanel.repaint();
         });
         popupMenu2.add(deleteItem2);
         
@@ -159,9 +166,7 @@ public class HealthTrackerView extends javax.swing.JFrame
 
             @Override
             public void mouseClicked(MouseEvent e)
-            {
-                System.out.println("Mouse pressed!");
-            }
+            {}
 
             @Override
             public void mousePressed(MouseEvent e)
@@ -477,6 +482,11 @@ public class HealthTrackerView extends javax.swing.JFrame
         
         // If parsing fails for some unforseen reason, just return today.
         return Calendar.getInstance().getTime();
+    }
+
+    public JLabel getDateLabel()
+    {
+        return dateLabel;
     }
     
     // Code below this line is generated code.
