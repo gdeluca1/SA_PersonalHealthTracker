@@ -81,6 +81,7 @@ public class PieGraph extends JPanel{
     
     @Override
     protected void paintComponent(Graphics g){
+        super.paintComponent(g);
         
         setPreferredSize(new Dimension(300,375));
         
