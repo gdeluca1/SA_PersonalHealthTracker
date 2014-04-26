@@ -61,7 +61,10 @@ public class BarGraph extends JPanel{
         averageBloodPressureSystolic,
         averageBloodPressureDystolic,
         physicalActivities,
-        sedentaryActivities;
+        sedentaryActivities,
+        bloodSugarRecorded,
+        systolicRecorded,
+        dystolicRecorded;
     
     double boxAdderSystolic,
             boxAdderDystolic,
@@ -82,6 +85,9 @@ public class BarGraph extends JPanel{
         averageBloodPressureDystolic = 0;
         physicalActivities = 0;
         sedentaryActivities = 0;
+        bloodSugarRecorded = 0;
+        systolicRecorded = 0;
+        dystolicRecorded = 0;
         update = true;
         graphTitle = title;
         
@@ -108,6 +114,7 @@ public class BarGraph extends JPanel{
         
         setPreferredSize(new Dimension(300,600));
         
+        //If autoupdate is enabled, these values need to be reset to calcualte new statistics
         if(autoUpdate){
 
                 activities = ActivityModel.getInstance().getVisibleActivities();
@@ -119,36 +126,55 @@ public class BarGraph extends JPanel{
                 averageBloodPressureDystolic = 0;
                 physicalActivities = 0;
                 sedentaryActivities = 0;
+                bloodSugarRecorded = 0;
+                systolicRecorded = 0;
+                dystolicRecorded = 0;
                 update = true;
                 
             }
         
         if(!activities.isEmpty()){
             if(update){
+                
                 update = false;
+                
+                //Search the list of activities for the various statistics, and compile them into averages used to create the bars for the graph
                 activities
                         .parallelStream()
                         .forEach((activity) ->
                         {
-                            if(activity.getBloodPressureSystolic() > 0) averageBloodPressureSystolic += activity.getBloodPressureSystolic();
+                            if(activity.getBloodPressureSystolic() > 0){
+                                averageBloodPressureSystolic += activity.getBloodPressureSystolic();
+                                systolicRecorded++;
+                            }
                                 
-                            if(activity.getBloodPressureDystolic() > 0) averageBloodPressureDystolic += activity.getBloodPressureDystolic();
+                            if(activity.getBloodPressureDystolic() > 0){
+                                averageBloodPressureDystolic += activity.getBloodPressureDystolic();
+                                dystolicRecorded++;
+                            }
                             
-                            if(activity.getBloodSugar() > 0) averageBloodSugar += activity.getBloodSugar();
+                            if(activity.getBloodSugar() > 0){
+                                averageBloodSugar += activity.getBloodSugar();
+                                bloodSugarRecorded++;
+                            }
 
                             switch(activity.getActivity()){
                                 case CARDIO:
-                                    if(activity.getPulse() > 0) averageActivePulse += activity.getPulse();
+                                    if(activity.getPulse() > 0){
+                                        averageActivePulse += activity.getPulse();
+                                        physicalActivities++;
+                                    }
                                     if(GraphFactory.getSecondsSpent(activity) > 0){
                                         averageTimeSpent += GraphFactory.getSecondsSpent(activity);
-                                        physicalActivities++;
                                     }
                                     break;
                                 case STRENGTH:
-                                    if(activity.getPulse() > 0) averageActivePulse += activity.getPulse();
+                                    if(activity.getPulse() > 0){
+                                        averageActivePulse += activity.getPulse();
+                                        physicalActivities++;
+                                    }
                                     if(GraphFactory.getSecondsSpent(activity) > 0){
                                         averageTimeSpent += GraphFactory.getSecondsSpent(activity);
-                                        physicalActivities++;
                                     }
                                     break;
                                 case SEDENTARY:
@@ -163,6 +189,8 @@ public class BarGraph extends JPanel{
 
                         });
                 
+                
+                //Compute the averages for each statistic
                 averageBloodPressureSystolic /= activities.size();
                 averageBloodPressureDystolic /= activities.size();
                 averageBloodSugar /= activities.size();
@@ -174,6 +202,8 @@ public class BarGraph extends JPanel{
                 }
                 
                 
+                //Calculate the size of the rectangle that needs to be added to the standard size of a bar (the size of the bar for the optimal value of a stat)
+                //in order to accurately reflect the difference between the user value and the optimal value
                 boxAdderSystolic = (averageBloodPressureSystolic-BLOOD_PRESSURE_SYSTOLIC)/BLOOD_PRESSURE_SYSTOLIC;
 //                System.out.println("BloodPressureSystolic: " + boxAdderSystolic);
                 boxAdderDystolic = (averageBloodPressureDystolic-BLOOD_PRESSURE_DYSTOLIC)/BLOOD_PRESSURE_DYSTOLIC;
@@ -213,6 +243,8 @@ public class BarGraph extends JPanel{
                     boxAdderTimeSpent = (averageTimeSpent - 365*TIME_SPENT_DAILY)/(365*TIME_SPENT_DAILY);
                 }
                 
+                
+                //Ensure that bars never get so big they leave the graph area
                 if(boxAdderSystolic > 1){
                     boxAdderSystolic = 1;
                 }
@@ -239,12 +271,15 @@ public class BarGraph extends JPanel{
                     
             }
                 
+                //Standard units of measurement
                 int widthSegment = getWidth()/14;
                 int heightSegment = getHeight()/9;
                 
+                //Draw the axes
                 g.drawLine(widthSegment, heightSegment, widthSegment, 7*heightSegment);
                 g.drawLine(widthSegment, 7*heightSegment, (int) (13.5*widthSegment), 7*heightSegment);
                 
+                //Draw the bars representing the optimal value for each stat
                 g.fillRect(2*widthSegment+widthSegment/2, 4*heightSegment, widthSegment/2, 3*heightSegment);
                 g.fillRect(4*widthSegment+widthSegment/2, 4*heightSegment, widthSegment/2, 3*heightSegment);
                 g.fillRect(6*widthSegment+widthSegment/2, 4*heightSegment, widthSegment/2, 3*heightSegment);
@@ -252,6 +287,7 @@ public class BarGraph extends JPanel{
                 g.fillRect(10*widthSegment+widthSegment/2, 4*heightSegment, widthSegment/2, 3*heightSegment);
                 g.fillRect(12*widthSegment+widthSegment/2, 4*heightSegment, widthSegment/2, 3*heightSegment);
                 
+                //Draw the bars representing the user's difference from the optimal values
                 g.setColor(Color.BLUE);
                 g.fillRect(2*widthSegment, (int) (4*heightSegment-3*boxAdderTimeSpent*heightSegment), widthSegment/2, (int) (3*heightSegment+3*boxAdderTimeSpent*heightSegment+1));
                 g.fillRect(4*widthSegment, (int) (4*heightSegment-3*boxAdderBloodSugar*heightSegment), widthSegment/2, (int) (3*heightSegment+3*boxAdderBloodSugar*heightSegment+1));
@@ -260,6 +296,7 @@ public class BarGraph extends JPanel{
                 g.fillRect(10*widthSegment, (int) (4*heightSegment-3*boxAdderSystolic*heightSegment), widthSegment/2, (int) (3*heightSegment+3*boxAdderSystolic*heightSegment+1));
                 g.fillRect(12*widthSegment, (int) (4*heightSegment-3*boxAdderDystolic*heightSegment), widthSegment/2, (int) (3*heightSegment+3*boxAdderDystolic*heightSegment+1));
                 
+                //Draw the Legend
                 g.setFont(new Font("TimesRoman", Font.PLAIN, (int) (getWidth()/70 + 1)));
                 
                 g.fillRect(widthSegment, (int) (8.5*heightSegment), widthSegment/12, widthSegment/12);
@@ -268,6 +305,7 @@ public class BarGraph extends JPanel{
                 g.fillRect(widthSegment, (int) (8.8*heightSegment), widthSegment/12, widthSegment/12);
                 g.drawString(" = The optimal value compared to the optimal", widthSegment + widthSegment/12, (int) (8.8*heightSegment+widthSegment/12));
                 
+                //Text explaning what stat each set of bars represents
                 g.drawString("Time spent on", 2*widthSegment, (int) (7.3*heightSegment));
                 g.drawString("activities", 2*widthSegment, (int) (7.55*heightSegment));
                 g.drawString("Blood Sugar", 4*widthSegment, (int) (7.3*heightSegment));
@@ -278,9 +316,11 @@ public class BarGraph extends JPanel{
                 g.drawString("Blood Pressure", 12*widthSegment, (int) (7.3*heightSegment));
                 g.drawString("Dystolic", 12*widthSegment, (int) (7.55*heightSegment));
                 
+                //Y-Axis Label
                 g.setFont(new Font("TimesRoman", Font.PLAIN, (int) (getWidth()/40 + 1)));
                 g.drawString("%", widthSegment/2, 4*heightSegment);
                 
+                //Graph title
                 g.setFont(new Font("TimesRoman", Font.BOLD, (int) (getWidth()/35 + 1)));
                 g.drawString("Comparisons to Optimal Values: " + graphTitle, widthSegment, (int) (.75*heightSegment));
         }
