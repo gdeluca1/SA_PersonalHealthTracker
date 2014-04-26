@@ -237,7 +237,20 @@ public class HealthTrackerController
                     graphTitle = "Week ";
             }
             
-            graphTitle += "of " + view.getDateLabel().getText();
+            graphTitle += "of " + view.getDateLabel().getText() + " - ";
+            
+            switch (view.getTrendingPanel().getSelectedRadioButton())
+            {
+                case Activity.ActivityType.CARDIO:
+                    graphTitle += "Cardio";
+                    break;
+                case Activity.ActivityType.STRENGTH:
+                    graphTitle += "Strength";
+                    break;
+                case Activity.ActivityType.SEDENTARY:
+                    graphTitle += "Sedentary";
+                    break;
+            }
             
             view.addGraphPanel(
                     GraphFactory.getLineChart(
@@ -431,7 +444,7 @@ public class HealthTrackerController
         pj.setPrintable ((Graphics pg, PageFormat pf, int pageNum) ->
         {
             // Calculate how many activities will fit on a page and how many pages will be needed to print them all.
-            int activitiesPerPage = (int) (pf.getImageableHeight() - pf.getImageableY()) / heightActivity;
+            int activitiesPerPage = 2 * (int) (pf.getImageableHeight() - pf.getImageableY()) / heightActivity;
             // Multiply by 1.0 to do floating point division and avoid truncation.
             int totalPages = (int) Math.ceil((1.0 * activityCount / activitiesPerPage) - 1);
             int activityPages = totalPages;
@@ -457,13 +470,20 @@ public class HealthTrackerController
                 {
                     if (i + activitiesPerPage * pageNum < activityPanel.getComponentCount())
                     {
-                        // If this doesn't go at the top of the page, move the graphics pointer down one activity.
-                         if (i > 0)
-                             g2.translate(pf.getImageableX(), pf.getImageableY() + heightActivity);
-                         else
-                             g2.translate(pf.getImageableX(), pf.getImageableY());
+                        if (i == 0)
+                        {
+                            g2.translate(pf.getImageableX(), pf.getImageableY());
+                        }
+                        else if (i % 2 == 0)
+                        {
+                            g2.translate(-pf.getImageableWidth() / 2, heightActivity);
+                        }
+                        else
+                        {
+                            g2.translate(pf.getImageableWidth() / 2, 0);
+                        }
 
-                         activityPanel.getComponent(i + activitiesPerPage * pageNum).paint(g2);
+                        activityPanel.getComponent(i + activitiesPerPage * pageNum).paint(g2);
                     }
                 }
             }
