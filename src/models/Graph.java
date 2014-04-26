@@ -9,6 +9,9 @@ import views.PieGraph;
 
 public class Graph implements Serializable
 {
+    // Add a serial version UID to prevent deserialization issues.
+    private static final long serialVersionUID = 853169302L;
+    
     private final int graphType;
     
     public static final int LINE = 0,
