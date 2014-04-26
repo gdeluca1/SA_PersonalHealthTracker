@@ -463,7 +463,7 @@ public class HealthTrackerView extends javax.swing.JFrame
             {}
         });
         
-        graph.setPreferredSize(new Dimension(300,200));
+        graph.setPreferredSize(new Dimension(300,350));
         graphPanel.add(graph);
         graphPanel.revalidate();
         graphPanel.repaint();

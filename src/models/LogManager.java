@@ -160,40 +160,38 @@ public class LogManager
         // Save the state to a file named after their username on their home directory.
         File saveFile = new File(new File(System.getProperty("user.home")), "/PersonalHealthTracker/" + ProfileModel.getInstance().getCurrentUser() + ".dat");
         saveFile.getParentFile().mkdir();
-        if (! ActivityModel.getInstance().getActivities().isEmpty())
+        
+        FileOutputStream fOut = null;
+        try
         {
-            FileOutputStream fOut = null;
-            try
+            fOut = new FileOutputStream(saveFile);
+            ObjectOutputStream out = new ObjectOutputStream(fOut);
+            out.writeObject(ActivityModel.getInstance().getActivities());
+            if (DEBUG)
             {
-                fOut = new FileOutputStream(saveFile);
-                ObjectOutputStream out = new ObjectOutputStream(fOut);
-                out.writeObject(ActivityModel.getInstance().getActivities());
-                if (DEBUG)
+                System.out.println("Wrote: " + ActivityModel.getInstance().getActivities().size() + " activities.");
+            }
+        }
+        catch (FileNotFoundException ex)
+        {
+            Logger.getLogger(LogManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (IOException ex)
+        {
+            Logger.getLogger(LogManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        finally 
+        {
+            try 
+            {
+                if (fOut != null)
                 {
-                    System.out.println("Wrote: " + ActivityModel.getInstance().getActivities().size() + " activities.");
+                    fOut.close();
                 }
             }
-            catch (FileNotFoundException ex)
+            catch (IOException ex) 
             {
                 Logger.getLogger(LogManager.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            catch (IOException ex)
-            {
-                Logger.getLogger(LogManager.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            finally 
-            {
-                try 
-                {
-                    if (fOut != null)
-                    {
-                        fOut.close();
-                    }
-                }
-                catch (IOException ex) 
-                {
-                    Logger.getLogger(LogManager.class.getName()).log(Level.SEVERE, null, ex);
-                }
             }
         }
     }
@@ -244,40 +242,37 @@ public class LogManager
         File saveFile = new File(new File(System.getProperty("user.home")), "/PersonalHealthTracker/" + ProfileModel.getInstance().getCurrentUser() + "Graphs.dat");
         saveFile.getParentFile().mkdir();
         ArrayList<Graph> graphs = GraphModel.getInstance().getGraphs(graphPanel);
-        if (! graphs.isEmpty())
+        FileOutputStream fOut = null;
+        try
         {
-            FileOutputStream fOut = null;
-            try
+            fOut = new FileOutputStream(saveFile);
+            ObjectOutputStream out = new ObjectOutputStream(fOut);
+            out.writeObject(graphs);
+            if (DEBUG)
             {
-                fOut = new FileOutputStream(saveFile);
-                ObjectOutputStream out = new ObjectOutputStream(fOut);
-                out.writeObject(graphs);
-                if (DEBUG)
+                System.out.println("Wrote: " + graphs.size() + " graphs.");
+            }
+        }
+        catch (FileNotFoundException ex)
+        {
+            Logger.getLogger(LogManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (IOException ex)
+        {
+            Logger.getLogger(LogManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        finally 
+        {
+            try 
+            {
+                if (fOut != null)
                 {
-                    System.out.println("Wrote: " + graphs.size() + " graphs.");
+                    fOut.close();
                 }
             }
-            catch (FileNotFoundException ex)
+            catch (IOException ex) 
             {
                 Logger.getLogger(LogManager.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            catch (IOException ex)
-            {
-                Logger.getLogger(LogManager.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            finally 
-            {
-                try 
-                {
-                    if (fOut != null)
-                    {
-                        fOut.close();
-                    }
-                }
-                catch (IOException ex) 
-                {
-                    Logger.getLogger(LogManager.class.getName()).log(Level.SEVERE, null, ex);
-                }
             }
         }
     }
