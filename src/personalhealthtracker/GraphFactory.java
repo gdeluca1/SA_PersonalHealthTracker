@@ -12,6 +12,7 @@ import models.Activity;
 import models.ActivityModel;
 import views.BarGraph;
 import views.LineGraph;
+import views.PieGraph;
 
 /**
  *
@@ -52,8 +53,12 @@ public class GraphFactory
         return new LineGraph(ActivityModel.getInstance().getVisibleActivities(), selectedStat, autoUpdate, graphTitle);
     }
     
-    public static JPanel getBarChart(boolean autoUpdate)
+    public static JPanel getBarChart(boolean autoUpdate, String graphTitle)
     {
-        return new BarGraph(ActivityModel.getInstance().getVisibleActivities(), autoUpdate);
+        return new BarGraph(ActivityModel.getInstance().getVisibleActivities(), autoUpdate, graphTitle);
+    }
+    
+    public static JPanel getPieChart(boolean autoUpdate, String graphTitle){
+        return new PieGraph(ActivityModel.getInstance().getVisibleActivities(), autoUpdate, graphTitle);
     }
 }

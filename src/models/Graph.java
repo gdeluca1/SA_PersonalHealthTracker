@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 import views.BarGraph;
 import views.LineGraph;
+import views.PieGraph;
 
 public class Graph implements Serializable
 {
@@ -19,7 +20,7 @@ public class Graph implements Serializable
     private final boolean autoUpdate;
     private String graphTitle;
     
-    public Graph(int graphType, ArrayList<Activity> displayedActivities, boolean autoUpdate)
+    public Graph(int graphType, ArrayList<Activity> displayedActivities, boolean autoUpdate, String graphTitle)
     {
         // To instantiate a line graph, we require more information than this constructor accepts.
         assert graphType != LINE;
@@ -27,6 +28,7 @@ public class Graph implements Serializable
         this.graphType = graphType;
         this.displayedActivities = displayedActivities;
         this.autoUpdate = autoUpdate;
+        this.graphTitle = graphTitle;
     }
     
     public Graph(int graphType, ArrayList<Activity> displayedActivities, boolean autoUpdate, int selectedStat, String graphTitle)
@@ -45,7 +47,9 @@ public class Graph implements Serializable
             case LINE:
                 return new LineGraph(displayedActivities, selectedStat, autoUpdate, graphTitle);
             case BAR:
-                return new BarGraph(displayedActivities, autoUpdate);
+                return new BarGraph(displayedActivities, autoUpdate, graphTitle);
+            case PIE:
+                return new PieGraph(displayedActivities, autoUpdate, graphTitle);
             default:
                 return null;
         }

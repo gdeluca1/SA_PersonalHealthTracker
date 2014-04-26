@@ -56,7 +56,7 @@ public class HealthTrackerView extends javax.swing.JFrame
     public static final int WEEKLY = -1, MONTHLY = 0, YEARLY = 1;
     
     // Either weekly, monthly, or yearly.
-    private int viewMode = WEEKLY;
+    private static int viewMode = WEEKLY;
     
     /**
      * Creates new form HealthTrackerController2
@@ -410,7 +410,7 @@ public class HealthTrackerView extends javax.swing.JFrame
         this.viewMode = viewMode;
     }
 
-    public int getViewMode()
+    public static int getViewMode()
     {
         return viewMode;
     }

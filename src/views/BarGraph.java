@@ -7,6 +7,7 @@
 package views;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.util.ArrayList;
@@ -51,6 +52,8 @@ public class BarGraph extends JPanel{
     private boolean autoUpdate;
     private boolean update;
     
+    private String graphTitle;
+    
     double averageActivePulse,
         averageRestingPulse,
         averageTimeSpent,
@@ -67,7 +70,7 @@ public class BarGraph extends JPanel{
             boxAdderBloodSugar,
             boxAdderTimeSpent;
     
-    public BarGraph(ArrayList<Activity> activities, boolean autoUpdate){
+    public BarGraph(ArrayList<Activity> activities, boolean autoUpdate, String title){
         super();
         this.activities = activities;
         this.autoUpdate = autoUpdate;
@@ -80,6 +83,8 @@ public class BarGraph extends JPanel{
         physicalActivities = 0;
         sedentaryActivities = 0;
         update = true;
+        graphTitle = title;
+        
     }
 
     public ArrayList<Activity> getActivities()
@@ -92,10 +97,16 @@ public class BarGraph extends JPanel{
         return autoUpdate;
     }
     
+    public String getTitle(){
+        return graphTitle;
+    }
+    
     @Override
     protected void paintComponent(Graphics g){
         
         super.paintComponent(g);
+        
+        setPreferredSize(new Dimension(300,600));
         
         if(autoUpdate){
 
@@ -119,24 +130,32 @@ public class BarGraph extends JPanel{
                         .parallelStream()
                         .forEach((activity) ->
                         {
-                            averageBloodPressureSystolic += activity.getBloodPressureSystolic();
-                            averageBloodPressureDystolic += activity.getBloodPressureDystolic();
-                            averageBloodSugar += activity.getBloodSugar();
+                            if(activity.getBloodPressureSystolic() > 0) averageBloodPressureSystolic += activity.getBloodPressureSystolic();
+                                
+                            if(activity.getBloodPressureDystolic() > 0) averageBloodPressureDystolic += activity.getBloodPressureDystolic();
+                            
+                            if(activity.getBloodSugar() > 0) averageBloodSugar += activity.getBloodSugar();
 
                             switch(activity.getActivity()){
                                 case CARDIO:
-                                    averageActivePulse += activity.getPulse();
-                                    averageTimeSpent += GraphFactory.getSecondsSpent(activity);
-                                    physicalActivities++;
+                                    if(activity.getPulse() > 0) averageActivePulse += activity.getPulse();
+                                    if(GraphFactory.getSecondsSpent(activity) > 0){
+                                        averageTimeSpent += GraphFactory.getSecondsSpent(activity);
+                                        physicalActivities++;
+                                    }
                                     break;
                                 case STRENGTH:
-                                    averageActivePulse += activity.getPulse();
-                                    averageTimeSpent += GraphFactory.getSecondsSpent(activity);
-                                    physicalActivities++;
+                                    if(activity.getPulse() > 0) averageActivePulse += activity.getPulse();
+                                    if(GraphFactory.getSecondsSpent(activity) > 0){
+                                        averageTimeSpent += GraphFactory.getSecondsSpent(activity);
+                                        physicalActivities++;
+                                    }
                                     break;
                                 case SEDENTARY:
-                                    averageRestingPulse += activity.getPulse();
-                                    sedentaryActivities++;
+                                    if(activity.getPulse() > 0){
+                                        averageRestingPulse += activity.getPulse();
+                                        sedentaryActivities++;
+                                    }
                                     break;
                                 default:
                                     break;
@@ -147,9 +166,12 @@ public class BarGraph extends JPanel{
                 averageBloodPressureSystolic /= activities.size();
                 averageBloodPressureDystolic /= activities.size();
                 averageBloodSugar /= activities.size();
-                averageActivePulse /= physicalActivities;
-                averageRestingPulse /= sedentaryActivities;
-                averageTimeSpent /= physicalActivities;
+                if(physicalActivities > 0){
+                    averageActivePulse /= physicalActivities;
+                }
+                if(sedentaryActivities > 0){
+                    averageRestingPulse /= sedentaryActivities;
+                }
                 
                 
                 boxAdderSystolic = (averageBloodPressureSystolic-BLOOD_PRESSURE_SYSTOLIC)/BLOOD_PRESSURE_SYSTOLIC;
@@ -181,7 +203,40 @@ public class BarGraph extends JPanel{
                     boxAdderSedentaryPulse = (averageRestingPulse - SEDENTARY_PULSE_MAX)/SEDENTARY_PULSE_MAX;
                 }
                 
-                boxAdderTimeSpent = (averageTimeSpent - TIME_SPENT_DAILY)/TIME_SPENT_DAILY;
+                if(HealthTrackerView.getViewMode() == WEEKLY){
+                    boxAdderTimeSpent = (averageTimeSpent - 7*TIME_SPENT_DAILY)/(7*TIME_SPENT_DAILY);
+                }
+                else if(HealthTrackerView.getViewMode() == MONTHLY){
+                    boxAdderTimeSpent = (averageTimeSpent - 31*TIME_SPENT_DAILY)/(31*TIME_SPENT_DAILY);
+                }
+                else{
+                    boxAdderTimeSpent = (averageTimeSpent - 365*TIME_SPENT_DAILY)/(365*TIME_SPENT_DAILY);
+                }
+                
+                if(boxAdderSystolic > 1){
+                    boxAdderSystolic = 1;
+                }
+                
+                if(boxAdderDystolic > 1){
+                    boxAdderDystolic = 1;
+                }
+                
+                if(boxAdderBloodSugar > 1){
+                    boxAdderBloodSugar = 1;
+                }
+                
+                if(boxAdderTimeSpent > 1){
+                    boxAdderTimeSpent = 1;
+                }
+                
+                if(boxAdderActivePulse > 1){
+                    boxAdderActivePulse = 1;
+                }
+                
+                if(boxAdderSedentaryPulse > 1){
+                    boxAdderSedentaryPulse = 1;
+                }
+                    
             }
                 
                 int widthSegment = getWidth()/14;
@@ -214,20 +269,20 @@ public class BarGraph extends JPanel{
                 g.drawString(" = The optimal value compared to the optimal", widthSegment + widthSegment/12, (int) (8.8*heightSegment+widthSegment/12));
                 
                 g.drawString("Time spent on", 2*widthSegment, (int) (7.3*heightSegment));
-                g.drawString("activities", 2*widthSegment, (int) (7.45*heightSegment));
+                g.drawString("activities", 2*widthSegment, (int) (7.55*heightSegment));
                 g.drawString("Blood Sugar", 4*widthSegment, (int) (7.3*heightSegment));
                 g.drawString("Resting Pulse", 6*widthSegment, (int) (7.3*heightSegment));
                 g.drawString("Active Pulse", 8*widthSegment, (int) (7.3*heightSegment));
                 g.drawString("Blood Pressure", 10*widthSegment, (int) (7.3*heightSegment));
-                g.drawString("Systolic", 10*widthSegment, (int) (7.45*heightSegment));
+                g.drawString("Systolic", 10*widthSegment, (int) (7.55*heightSegment));
                 g.drawString("Blood Pressure", 12*widthSegment, (int) (7.3*heightSegment));
-                g.drawString("Dystolic", 12*widthSegment, (int) (7.45*heightSegment));
+                g.drawString("Dystolic", 12*widthSegment, (int) (7.55*heightSegment));
                 
                 g.setFont(new Font("TimesRoman", Font.PLAIN, (int) (getWidth()/40 + 1)));
                 g.drawString("%", widthSegment/2, 4*heightSegment);
                 
-                g.setFont(new Font("TimesRoman", Font.BOLD, (int) (getWidth()/20 + 1)));
-                g.drawString("Comparisons to Optimal Values", 2*widthSegment, heightSegment/2);
+                g.setFont(new Font("TimesRoman", Font.BOLD, (int) (getWidth()/35 + 1)));
+                g.drawString("Comparisons to Optimal Values: " + graphTitle, widthSegment, (int) (.75*heightSegment));
         }
     }
     

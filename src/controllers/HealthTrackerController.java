@@ -214,18 +214,48 @@ public class HealthTrackerController
         
         view.getTrendingPanel().addBarGraphButtonListener((e) ->
         {
-            view.addGraphPanel(GraphFactory.getBarChart(view.getTrendingPanel().autoUpdateBar()));
+            String graphTitle;
+            switch (HealthTrackerView.getViewMode())
+            {
+                case HealthTrackerView.YEARLY:
+                    graphTitle = "Year ";
+                    break;
+                case HealthTrackerView.MONTHLY:
+                    graphTitle = "Month ";
+                    break;
+                default:
+                    graphTitle = "Week ";
+            }
+            
+            graphTitle += "of " + view.getDateLabel().getText();
+            
+            view.addGraphPanel(GraphFactory.getBarChart(view.getTrendingPanel().autoUpdateBar(), graphTitle));
         });
         
         view.getTrendingPanel().addPieChartButtonListener((e) ->
         {
-            view.addGraphPanel(GraphFactory.getPieChart());
+            String graphTitle;
+            switch (HealthTrackerView.getViewMode())
+            {
+                case HealthTrackerView.YEARLY:
+                    graphTitle = "Year ";
+                    break;
+                case HealthTrackerView.MONTHLY:
+                    graphTitle = "Month ";
+                    break;
+                default:
+                    graphTitle = "Week ";
+            }
+            
+            graphTitle += "of " + view.getDateLabel().getText();
+            
+            view.addGraphPanel(GraphFactory.getPieChart(view.getTrendingPanel().autoUpdateBar(), graphTitle));
         });
         
         view.getTrendingPanel().addLineGraphButtonListener((e) ->
         {
             String graphTitle;
-            switch (view.getViewMode())
+            switch (HealthTrackerView.getViewMode())
             {
                 case HealthTrackerView.YEARLY:
                     graphTitle = "Year ";

@@ -6,6 +6,7 @@ import javax.swing.JPanel;
 import views.BarGraph;
 import views.HealthTrackerView;
 import views.LineGraph;
+import views.PieGraph;
 
 public class GraphModel
 {
@@ -58,7 +59,13 @@ public class GraphModel
             else if (graphPanel.getComponent(i) instanceof BarGraph)
             {
                 BarGraph graph = (BarGraph) graphPanel.getComponent(i);
-                graphs.add(new Graph(Graph.BAR, graph.getActivities(), graph.isAutoUpdate()));
+                graphs.add(new Graph(Graph.BAR, graph.getActivities(), graph.isAutoUpdate(), graph.getTitle()));
+            }
+            
+            else if (graphPanel.getComponent(i) instanceof PieGraph)
+            {
+                PieGraph graph = (PieGraph) graphPanel.getComponent(i);
+                graphs.add(new Graph(Graph.PIE, graph.getActivities(), graph.isAutoUpdate(), graph.getTitle()));
             }
         }
         return graphs;
