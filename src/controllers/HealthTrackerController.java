@@ -249,7 +249,7 @@ public class HealthTrackerController
             
             graphTitle += "of " + view.getDateLabel().getText();
             
-            view.addGraphPanel(GraphFactory.getPieChart(view.getTrendingPanel().autoUpdateBar(), graphTitle));
+            view.addGraphPanel(GraphFactory.getPieChart(view.getTrendingPanel().autoUpdatePie(), graphTitle));
         });
         
         view.getTrendingPanel().addLineGraphButtonListener((e) ->
@@ -325,6 +325,8 @@ public class HealthTrackerController
                     view.startProgressBar();
 
                     ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+                    
+                    @SuppressWarnings("unchecked")
                     ArrayList<Activity> activityList = (ArrayList<Activity>) in.readObject();
                     
                     // The data has all been received. Add it to the actual list.

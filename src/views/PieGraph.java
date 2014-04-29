@@ -51,6 +51,7 @@ public class PieGraph extends JPanel{
         
         this.activities = activities;
         this.autoUpdate = autoUpdate;
+        System.out.println(autoUpdate);
         graphTitle = title;
         
         cardioTime = 0;
@@ -139,21 +140,28 @@ public class PieGraph extends JPanel{
         
         //Draw the portion of the pie for the time spent on cardio
         g.setColor(Color.RED);
-        g.fillArc(2*widthSegment, 2*heightSegment, 3*heightSegment, 3*heightSegment, 0, (int) (cardioPercentage * DEGREES_IN_CIRCLE + 1));
+        g.fillArc(2*widthSegment, 2*heightSegment, 3*heightSegment, 3*heightSegment, 0, (int) (cardioPercentage * DEGREES_IN_CIRCLE));
         g.fillRect((int) (1.7*widthSegment), (int) (5.7*heightSegment), widthSegment/7, widthSegment/7);
         g.drawString("= Time spent doing Cardio", 2*widthSegment, (int) (5.8*heightSegment));
         
         //Draw the portion of the pie for the time spent on strength
         g.setColor(Color.BLUE);
-        g.fillArc(2*widthSegment, 2*heightSegment, 3*heightSegment, 3*heightSegment, (int) (cardioPercentage * DEGREES_IN_CIRCLE + 1), (int) (strengthPercentage * DEGREES_IN_CIRCLE + 1));
+        g.fillArc(2*widthSegment, 2*heightSegment, 3*heightSegment, 3*heightSegment, (int) (cardioPercentage * DEGREES_IN_CIRCLE), (int) (strengthPercentage * DEGREES_IN_CIRCLE));
         g.fillRect((int) (1.7*widthSegment), (int) (6*heightSegment), widthSegment/7, widthSegment/7);
         g.drawString("= Time spent doing Strength", 2*widthSegment, (int) (6.1*heightSegment));
         
         //Draw the portion of the pie for the time spent being sedentary
         g.setColor(Color.BLACK);
-        g.fillArc(2*widthSegment, 2*heightSegment, 3*heightSegment, 3*heightSegment, ((int) (strengthPercentage * DEGREES_IN_CIRCLE) + (int) (cardioPercentage * DEGREES_IN_CIRCLE) + 1), (int) (sedentaryPercentage * DEGREES_IN_CIRCLE));
+        int start = ((int) (strengthPercentage * DEGREES_IN_CIRCLE) + (int) (cardioPercentage * DEGREES_IN_CIRCLE));
+        g.fillArc(2*widthSegment, 2*heightSegment, 3*heightSegment, 3*heightSegment, start, 360 - start);
         g.fillRect((int) (1.7*widthSegment), (int) (6.3*heightSegment), widthSegment/7, widthSegment/7);
         g.drawString("= Time spent being sedentary", 2*widthSegment, (int) (6.4*heightSegment));
+        
+        System.out.println();
+        System.out.println("Arc1 from: 0 to: " + (int) (cardioPercentage * DEGREES_IN_CIRCLE) + " arc2 from: " + (int) (cardioPercentage * DEGREES_IN_CIRCLE) +
+                " plus: " + (int) (strengthPercentage * DEGREES_IN_CIRCLE) + " arc3 from: " + ((int) (strengthPercentage * DEGREES_IN_CIRCLE) + (int) (cardioPercentage * DEGREES_IN_CIRCLE))
+                + " plus: " + (int) java.lang.Math.ceil(sedentaryPercentage * DEGREES_IN_CIRCLE));
+        System.out.println(autoUpdate);
         
         //Draw Graph Title
         g.setFont(new Font("TimesRoman", Font.BOLD, (int) (getWidth()/35 + 1)));
