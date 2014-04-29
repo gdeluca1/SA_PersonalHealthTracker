@@ -1,15 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package views;
 
 import java.awt.event.ActionListener;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
 import java.util.Date;
 import javax.swing.JTextField;
 import javax.swing.text.AttributeSet;
@@ -17,13 +8,8 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 import models.Activity;
 
-/**
- *
- * @author Gennaro
- */
 public class AddActivityPanel extends javax.swing.JPanel
-{
-    
+{    
     // This document will only allow integers to be input into the text field.  
     private class IntegerOnlyDocument extends PlainDocument 
     {
@@ -134,6 +120,11 @@ public class AddActivityPanel extends javax.swing.JPanel
         bloodSugarTextField.setText("");
     }
     
+    public void setDate(String date)
+    {
+        dateLabel.setText(date);
+    }
+    
     /**
      * Checks each field. If nothing has been input, return true.
      * @return True if all the fields are empty.
@@ -156,7 +147,7 @@ public class AddActivityPanel extends javax.swing.JPanel
 
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
-        jLabel1 = new javax.swing.JLabel();
+        dateLabel = new javax.swing.JLabel();
         activityComboBox = new javax.swing.JComboBox();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -184,10 +175,8 @@ public class AddActivityPanel extends javax.swing.JPanel
         jTextArea1.setRows(5);
         jScrollPane1.setViewportView(jTextArea1);
 
-        LocalDate date = LocalDate.now();
-        String today = date.format(DateTimeFormatter.ofPattern("MM/dd"));
-        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel1.setText("ADD ACTIVITY - " + today);
+        dateLabel.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        dateLabel.setText("Test Text");
 
         activityComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Cardio", "Strength", "Sedentary" }));
 
@@ -238,7 +227,7 @@ public class AddActivityPanel extends javax.swing.JPanel
                         .addComponent(activityComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(66, 66, 66)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(dateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(32, 32, 32)
                         .addComponent(jLabel3)
@@ -294,7 +283,7 @@ public class AddActivityPanel extends javax.swing.JPanel
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(23, 23, 23)
-                .addComponent(jLabel1)
+                .addComponent(dateLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(activityComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -340,8 +329,8 @@ public class AddActivityPanel extends javax.swing.JPanel
     private javax.swing.JTextField bloodPressureTextField1;
     private javax.swing.JTextField bloodPressureTextField2;
     private javax.swing.JTextField bloodSugarTextField;
+    private javax.swing.JLabel dateLabel;
     private javax.swing.JTextField hoursTextField;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
