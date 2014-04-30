@@ -357,6 +357,11 @@ public class HealthTrackerView extends javax.swing.JFrame
         // Make sure to close any open sockets and that no data is being transferred.
         HealthTrackerController.close();
         
+        if (newPanel.equals(ADD_ACTIVITY_PANEL))
+        {
+            addActivityPanel.setDate("ADD ACTIVITY - " + new SimpleDateFormat("MM/dd").format(getDate()));
+        }
+            
         ((CardLayout) middlePanel.getLayout()).show(middlePanel, newPanel);
         currentPanel = newPanel;
     }

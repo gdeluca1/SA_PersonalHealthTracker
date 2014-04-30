@@ -1,5 +1,6 @@
 package controllers;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -7,6 +8,7 @@ import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.awt.geom.AffineTransform;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
@@ -443,7 +445,11 @@ public class HealthTrackerController
     private void printComponents(JComponent activityPanel, JComponent graphPanel)
     {
         // If no activities have been added, don't even try to print.
-        if (activityPanel.getComponent(0) == null) return;
+        if (activityPanel.getComponentCount() == 0) 
+        {
+            JOptionPane.showMessageDialog(null, "There are no activities to print.");
+            return;
+        }
         
         // Determine the hiehgt of an activity and how many activities will be printed.
         int heightActivity = activityPanel.getComponent(0).getHeight();
@@ -531,12 +537,24 @@ public class HealthTrackerController
                     if (i + graphsPerPage * (pageNum - activityPages - 1) < graphCount)
                     {
                         // If this doesn't go at the top of the page, move the graphics pointer down one activity.
-                         if (i > 0)
-                             g2.translate(pf.getImageableX(), pf.getImageableY() + heightGraph);
-                         else
-                             g2.translate(pf.getImageableX(), pf.getImageableY());
-
-                         graphPanel.getComponent(1 + i + graphsPerPage * (pageNum - activityPages - 1)).paint(g2);
+                        if (i > 0)
+                            g2.translate(pf.getImageableX(), pf.getImageableY() + heightGraph);
+                        else
+                            g2.translate(pf.getImageableX(), pf.getImageableY());
+                        
+                        Component graph = graphPanel.getComponent(1 + i + graphsPerPage * (pageNum - activityPages - 1));
+                        
+                        AffineTransform transform = g2.getTransform();
+                        // If the graph's width is too large, fit it to the page.
+                        if (graph.getWidth() > pf.getImageableWidth())
+                        {
+                            double scale = pf.getImageableWidth() / graph.getWidth();
+                            g2.scale(scale, 1);
+                        }
+                        graph.paint(g2);
+                        
+                        // In case we changed the transformation for scaling, revert it.
+                        g2.setTransform(transform);
                     }
                     else
                     {
