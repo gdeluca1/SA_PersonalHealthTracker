@@ -2,9 +2,43 @@ package views;
 
 import java.awt.event.ActionListener;
 import javax.swing.JComboBox;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.PlainDocument;
 
 public class CreateAccountDialog extends javax.swing.JDialog
 {
+    
+    // This document will only allow integers to be input into the text field.  
+    private class IntegerOnlyDocument extends PlainDocument 
+    {
+
+        @Override
+        public void insertString(int offs, String str, AttributeSet a) throws BadLocationException
+        {
+            // Don't try to check the string if it is null.
+            if (str == null) return;
+
+            char[] input = str.toCharArray();
+            boolean allNumbers = true;
+
+            for (char c : input)
+            {
+                try
+                {
+                    Integer.parseInt(c + "");
+                }
+                catch (NumberFormatException ex)
+                {
+                    // If a character is not an integer, return.
+                    allNumbers = false;
+                    break;
+                }
+            }
+
+            if (allNumbers) super.insertString(offs, str, a);
+        }
+    }
 
     /**
      * Creates new form CreateAccountDialog
@@ -13,6 +47,8 @@ public class CreateAccountDialog extends javax.swing.JDialog
     {
         super(parent, modal);
         initComponents();
+        yearBox.setDocument(new IntegerOnlyDocument());
+        
     }
     
     public void addCreateAccountButtonListener(ActionListener listener)
