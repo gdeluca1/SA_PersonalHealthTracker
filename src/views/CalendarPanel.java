@@ -26,7 +26,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import personalhealthtracker.PersonalHealthTracker;
 
-// TODO: Add comments
 public class CalendarPanel
 {
     private static JPanel currentPanel = null;
@@ -123,14 +122,16 @@ public class CalendarPanel
         
         private JPanel daysPanel, monthPanel;
 
-        public MonthPanel(int month, int year) {
+        public MonthPanel(int month, int year) 
+        {
             CalendarPanel.month = month;
             CalendarPanel.year = year;
 
             add(createGUI());
         }
 
-        protected final JPanel createGUI() {
+        protected final JPanel createGUI() 
+        {
             monthPanel = new JPanel(true);
             monthPanel.setBorder(BorderFactory.createLineBorder(SystemColor.activeCaption));
             monthPanel.setLayout(new BorderLayout());
@@ -145,27 +146,34 @@ public class CalendarPanel
             return monthPanel;
         }
 
-        protected JPanel createTitleGUI() {
+        protected JPanel createTitleGUI() 
+        {
+            // Create the panel that displays the title.
             final JPanel titlePanel = new JPanel(true);
             titlePanel.setBorder(BorderFactory
                     .createLineBorder(SystemColor.activeCaption));
             titlePanel.setLayout(new FlowLayout());
             titlePanel.setBackground(Color.WHITE);
 
+            // Display the month and year.
             JLabel label = new JLabel(monthNames[month] + " " + year);
             label.setForeground(SystemColor.activeCaption);
 
+            // Display left and right buttons.
             JButton leftButton = null, rightButton = null;
             try
             {
                 leftButton = new JButton(new ImageIcon(ImageIO.read(PersonalHealthTracker.class.getResource("arrow-2-left.png"))));
                 rightButton = new JButton(new ImageIcon(ImageIO.read(PersonalHealthTracker.class.getResource("arrow-2-right.png"))));
                 
+                // When the left button is clicked, go back one month.
                 leftButton.addActionListener((e) ->
                 {
                     monthPanel.remove(daysPanel);
                     day = 1;
                     month--;
+                    
+                    // If it was January, make it December of the previous year.
                     if (month < 0)
                     {
                         month += 12;
@@ -183,11 +191,14 @@ public class CalendarPanel
                     repaint();
                 });
                 
+                // When the right button is clicked, go forward one month.
                 rightButton.addActionListener((e) ->
                 {
                     monthPanel.remove(daysPanel);
                     day = 1;
                     month++;
+                    
+                    // If it was december, make it January of the next year.
                     if (month > 11)
                     {
                         month -= 12;
@@ -220,7 +231,8 @@ public class CalendarPanel
             return titlePanel;
         }
 
-        protected JPanel createDaysGUI() {
+        protected JPanel createDaysGUI() 
+        {
             JPanel dayPanel = new JPanel(true);
             dayPanel.setLayout(new GridLayout(0, dayNames.length));
 
@@ -228,7 +240,8 @@ public class CalendarPanel
             calendar.set(Calendar.MONTH, month);
             calendar.set(Calendar.YEAR, year);
             calendar.set(Calendar.DAY_OF_MONTH, 1);
-
+            
+            // Create an iterator to go through the current month's days.
             Calendar iterator = (Calendar) calendar.clone();
             iterator.add(Calendar.DAY_OF_MONTH,
                     -(iterator.get(Calendar.DAY_OF_WEEK) - 1));
@@ -236,6 +249,7 @@ public class CalendarPanel
             Calendar maximum = (Calendar) calendar.clone();
             maximum.add(Calendar.MONTH, +1);
 
+            // Create a panel for each day of the week.
             for (String dayName : dayNames)
             {
                 JPanel dPanel = new JPanel(true);
