@@ -75,6 +75,12 @@ public class BarGraph extends JPanel{
     
     public BarGraph(ArrayList<Activity> activities, boolean autoUpdate, String title){
         super();
+        
+        if (autoUpdate)
+        {
+            title = "Auto Updating";
+        }
+        
         this.activities = activities;
         this.autoUpdate = autoUpdate;
         averageActivePulse = 0;
@@ -322,7 +328,10 @@ public class BarGraph extends JPanel{
                 
                 //Graph title
                 g.setFont(new Font("TimesRoman", Font.BOLD, (int) (getWidth()/35 + 1)));
+                
+                if (autoUpdate) g.setColor(Color.BLUE);
                 g.drawString("Comparisons to Optimal Values: " + graphTitle, widthSegment, (int) (.75*heightSegment));
+                g.setColor(Color.BLACK);
         }
     }
     

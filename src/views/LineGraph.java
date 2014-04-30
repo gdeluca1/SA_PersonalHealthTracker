@@ -37,6 +37,25 @@ public class LineGraph extends JPanel
     public LineGraph(ArrayList<Activity> activities, int selectedStat, boolean autoUpdate, String graphTitle)
     {
         super();
+        
+        if (autoUpdate)
+        {
+            switch (selectedStat)
+            {
+                case Activity.ActivityType.CARDIO:
+                    graphTitle = "Auto Updating - Cardio";
+                    break;
+                case Activity.ActivityType.SEDENTARY:
+                    graphTitle = "Auto Updating - Sedentary";
+                    break;
+                case Activity.ActivityType.STRENGTH:
+                    graphTitle = "Auto Updating - Strength";
+                    break;
+                default:
+                    graphTitle = "Unknown Graph Type";
+            }
+        }
+        
         this.activities = activities;
         this.selectedStat = selectedStat;
         this.autoUpdate = autoUpdate;
@@ -105,11 +124,13 @@ public class LineGraph extends JPanel
         String date = "Date";
         g2.drawString(date, graphWidth/2, (int)(graphHeight + 1.5 * heightOffset));
         
+        if (autoUpdate) g2.setColor(Color.BLUE);
         
         // Use FontMetrics to draw the string in the middle of the panel.
         FontMetrics fm = g2.getFontMetrics();
         Rectangle2D rect = fm.getStringBounds(title, g2);
         g2.drawString(title, (int) (graphWidth/2 - rect.getWidth()/2), (int) (heightOffset/2 + rect.getHeight()/2));
+        g2.setColor(Color.BLACK);
 
         // This map stores the amount of time the user worked out each day.
         if (timePerDay == null)        

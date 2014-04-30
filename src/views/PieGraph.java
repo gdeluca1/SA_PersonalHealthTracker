@@ -49,6 +49,11 @@ public class PieGraph extends JPanel{
         
         super();
         
+        if (autoUpdate)
+        {
+            title = "Auto Updating";
+        }
+        
         this.activities = activities;
         this.autoUpdate = autoUpdate;
         graphTitle = title;
@@ -157,7 +162,10 @@ public class PieGraph extends JPanel{
         
         //Draw Graph Title
         g.setFont(new Font("TimesRoman", Font.BOLD, (int) (getWidth()/35 + 1)));
+        
+        if (autoUpdate) g.setColor(Color.BLUE);
         g.drawString("Time Spent per Activity Type: " + graphTitle, widthSegment, (int) (.75*heightSegment));
+        g.setColor(Color.BLACK);
         
         
     }
