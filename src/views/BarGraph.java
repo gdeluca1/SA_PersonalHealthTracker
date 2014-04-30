@@ -84,6 +84,12 @@ public class BarGraph extends JPanel{
         bloodSugarRecorded = 0;
         systolicRecorded = 0;
         dystolicRecorded = 0;
+        boxAdderSystolic = 0;
+        boxAdderDystolic = 0;
+        boxAdderSedentaryPulse = 0;
+        boxAdderActivePulse = 0;
+        boxAdderBloodSugar = 0;
+        boxAdderTimeSpent = 0;
         update = true;
         graphTitle = title;
         
@@ -125,6 +131,12 @@ public class BarGraph extends JPanel{
                 bloodSugarRecorded = 0;
                 systolicRecorded = 0;
                 dystolicRecorded = 0;
+                boxAdderSystolic = 0;
+                boxAdderDystolic = 0;
+                boxAdderSedentaryPulse = 0;
+                boxAdderActivePulse = 0;
+                boxAdderBloodSugar = 0;
+                boxAdderTimeSpent = 0;
                 update = true;
                 
             }
@@ -266,6 +278,9 @@ public class BarGraph extends JPanel{
                 }
                     
             }
+        }
+            
+        
                 
                 //Standard units of measurement
                 int widthSegment = getWidth()/14;
@@ -274,6 +289,7 @@ public class BarGraph extends JPanel{
                 //Draw the axes
                 g.drawLine(widthSegment, heightSegment, widthSegment, 7*heightSegment);
                 g.drawLine(widthSegment, 7*heightSegment, (int) (13.5*widthSegment), 7*heightSegment);
+        
                 
                 //Draw the bars representing the optimal value for each stat
                 g.fillRect(2*widthSegment+widthSegment/2, 4*heightSegment, widthSegment/2, 3*heightSegment);
@@ -321,12 +337,13 @@ public class BarGraph extends JPanel{
                 
                 if (autoUpdate) g.setColor(Color.BLUE);
                 g.drawString("Comparisons to Optimal Values: " + graphTitle, widthSegment, (int) (.75*heightSegment));
+
                 g.setColor(Color.BLACK);
         }
-    }
     
     //Calculates the user's expected active pulse based on their age
-    private int activePulse(){
+    private int activePulse()
+    {
         int activePulse = 180;
         Optional<LinkedList<String>> currentUser = ProfileModel.getInstance().getProfile(ProfileModel.getInstance().getCurrentUser());
         if(currentUser.isPresent()){

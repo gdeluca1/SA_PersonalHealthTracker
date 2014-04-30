@@ -9,7 +9,7 @@ import views.LoginView;
 
 public class PersonalHealthTracker
 {
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     
     // This is the driver class. Display the login view and give control to the user.
     public static void main(String[] args)
