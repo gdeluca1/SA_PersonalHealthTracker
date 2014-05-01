@@ -74,7 +74,7 @@ public class LoginController
                 }
                 else
                 {
-                    JOptionPane.showMessageDialog(null, "Please complete all fields.");
+                    JOptionPane.showMessageDialog(null, "Please complete all fields with VALID values.");
                 }
             });
             

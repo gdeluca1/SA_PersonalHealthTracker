@@ -1,6 +1,7 @@
 package views;
 
 import java.awt.event.ActionListener;
+import java.util.Calendar;
 import javax.swing.JComboBox;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -74,7 +75,7 @@ public class CreateAccountDialog extends javax.swing.JDialog
         // If wanted, the password field can be given specific requirements.
         return (!"".equals(getUsername().trim())) && (!"".equals(getPassword().trim())) &&
                 (!"".equals(getRecoveryQuestion().trim())) && (!"".equals(getRecoveryAnswer().trim()) && (!"".equals(getBirthYear().trim())) &&
-                monthBox.getSelectedIndex() != -1 && dayBox.getSelectedIndex() != -1);
+                monthBox.getSelectedIndex() != -1 && dayBox.getSelectedIndex() != -1 && Integer.parseInt(getBirthYear().trim()) <= Calendar.getInstance().get(Calendar.YEAR));
     }
     
     public String getUsername()
